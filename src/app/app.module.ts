@@ -6,6 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { LinearPage } from "../pages/linear/linear";
+import { RadialPage } from "../pages/radial/radial";
+import { LinearPageModule } from "../pages/linear/linear.module";
+import { RadialPageModule } from "../pages/radial/radial.module";
 
 @NgModule({
   declarations: [
@@ -14,12 +18,16 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    LinearPageModule,
+    RadialPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    LinearPage,
+    RadialPage
   ],
   providers: [
     StatusBar,
