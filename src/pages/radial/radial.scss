@@ -21,10 +21,10 @@ page-radial {
     fill: black;
     font-size: 90px;
   }
-  #major g:hover path {
+  #major g:active path {
     fill: black;
   }
-  #major g:hover text {
+  #major g:active text {
     fill: white;
   }
 
@@ -39,10 +39,10 @@ page-radial {
     fill: white;
     font-size: 36px;
   }
-  #minor g:hover path {
+  #minor g:active path {
     fill: white;
   }
-  #minor g:hover text {
+  #minor g:active text {
     fill: black;
   }
 
@@ -53,10 +53,10 @@ page-radial {
   #rest circle {
     stroke: black;
   }
-  #rest:hover circle {
+  #rest:active circle {
     fill: white;
   }
-  #rest:hover g path {
+  #rest:active g path {
     fill: black;
   }
 }
