@@ -35,7 +35,7 @@ export class MusicProvider {
   test() {
     //var file = new MIDIWriter.File();
     //var track = new MIDIWriter.Track();
-    
+    //
 
     // 128 = 1/4 note
     this.track.addNote(0, 'C4', 64);
