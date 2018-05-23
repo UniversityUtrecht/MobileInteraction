@@ -14,5 +14,67 @@
 
 
 <ion-content padding>
+  <style>
+		#piano-container {
+			width: 250vw;
+		}
+		.white {
+			fill: white;
+			stroke-width: 1;
+			stroke: grey
+		}
+		.black {
+			fill: black;
+			stroke-width: 1;
+			stroke: black
+		}
+	</style>
+
 
 </ion-content>
+
+<ion-footer>
+  <ion-scroll scrollX="true" style = "width: 100%; height: 30vh">
+    <div id="piano-container">
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 420 80" id="piano">
+        <g>
+          <rect class="white c" data-note="c3" width="20" height="80" x="0" y="0"></rect>
+          <rect class="white d" data-note="d3" width="20" height="80" x="20" y="0"></rect>
+          <rect class="white e" data-note="e3" width="20" height="80" x="40" y="0"></rect>
+          <rect class="white f" data-note="f3" width="20" height="80" x="60" y="0"></rect>
+          <rect class="white g" data-note="g3" width="20" height="80" x="80" y="0"></rect>
+          <rect class="white a" data-note="a3" width="20" height="80" x="100" y="0"></rect>
+          <rect class="white b" data-note="b3" width="20" height="80" x="120" y="0"></rect>
+          <rect class="black cs" data-note="cs3" width="16" height="50" x="12" y="0"></rect>
+          <rect class="black ds" data-note="ds3" width="16" height="50" x="32" y="0"></rect>
+          <rect class="black fs" data-note="fs3" width="16" height="50" x="72" y="0"></rect>
+          <rect class="black gs" data-note="gs3" width="16" height="50" x="92" y="0"></rect>
+          <rect class="black as" data-note="as3" width="16" height="50" x="112" y="0"></rect>
+          <rect class="white c" data-note="c4" width="20" height="80" x="140" y="0"></rect>
+          <rect class="white d" data-note="d4" width="20" height="80" x="160" y="0"></rect>
+          <rect class="white e" data-note="e4" width="20" height="80" x="180" y="0"></rect>
+          <rect class="white f" data-note="f4" width="20" height="80" x="200" y="0"></rect>
+          <rect class="white g" data-note="g4" width="20" height="80" x="220" y="0"></rect>
+          <rect class="white a" data-note="a4" width="20" height="80" x="240" y="0"></rect>
+          <rect class="white b" data-note="b4" width="20" height="80" x="260" y="0"></rect>
+          <rect class="black cs" data-note="cs4" width="16" height="50" x="152" y="0"></rect>
+          <rect class="black ds" data-note="ds4" width="16" height="50" x="172" y="0"></rect>
+          <rect class="black fs" data-note="fs4" width="16" height="50" x="212" y="0"></rect>
+          <rect class="black gs" data-note="gs4" width="16" height="50" x="232" y="0"></rect>
+          <rect class="black as" data-note="as4" width="16" height="50" x="252" y="0"></rect>
+          <rect class="white c" data-note="c5" width="20" height="80" x="280" y="0"></rect>
+          <rect class="white d" data-note="d5" width="20" height="80" x="300" y="0"></rect>
+          <rect class="white e" data-note="e5" width="20" height="80" x="320" y="0"></rect>
+          <rect class="white f" data-note="f5" width="20" height="80" x="340" y="0"></rect>
+          <rect class="white g" data-note="g5" width="20" height="80" x="360" y="0"></rect>
+          <rect class="white a" data-note="a5" width="20" height="80" x="380" y="0"></rect>
+          <rect class="white b" data-note="b5" width="20" height="80" x="400" y="0"></rect>
+          <rect class="black cs" data-note="cs5" width="16" height="50" x="292" y="0"></rect>
+          <rect class="black ds" data-note="ds5" width="16" height="50" x="312" y="0"></rect>
+          <rect class="black fs" data-note="fs5" width="16" height="50" x="352" y="0"></rect>
+          <rect class="black gs" data-note="gs5" width="16" height="50" x="372" y="0"></rect>
+          <rect class="black as" data-note="as5" width="16" height="50" x="392" y="0"></rect>
+        </g>
+      </svg></div>
+  </ion-scroll>
+</ion-footer>
