@@ -56,10 +56,13 @@ export class MusicProvider {
 
   }
 
+  getCorrectNoteFormat(note: string) {
+	return note.charAt(0).toUpperCase() + note.slice(1);
+  }
   
   startNotePlay(note:string) {
     this.timeStart = new Date().getTime();
-    this.note = note.toUpperCase();
+    this.note = this.getCorrectNoteFormat(note);
     MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.note], this.velocity, this.delay);
   }
   
@@ -80,8 +83,8 @@ export class MusicProvider {
   }
   
   playSingleNote(note: string, duration: number = 1) {
-    MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[note.toUpperCase()], this.velocity, 0);
-    MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[note.toUpperCase()], this.velocity, duration);
+    MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.getCorrectNoteFormat(note)], this.velocity, 0);
+    MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[this.getCorrectNoteFormat(note)], this.velocity, duration);
     
     console.log(this.note, duration);
   }
