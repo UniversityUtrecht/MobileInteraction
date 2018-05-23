@@ -1,0 +1,62 @@
+page-radial {
+  // OVERALL
+  #radialPiano {
+    position: absolute;
+    bottom: 20px;
+    margin: 20px;
+  }
+  #major, #minor, #rest {
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+  }
+
+  // MAJOR CIRCLE
+  #major g path {
+    stroke: black;
+  }
+  #major g path {
+    fill: white
+  }
+  #major g text {
+    fill: black;
+    font-size: 90px;
+  }
+  #major g:active path {
+    fill: black;
+  }
+  #major g:active text {
+    fill: white;
+  }
+
+  // MINOR CIRCLE
+  #minor g path {
+    stroke: white;
+  }
+  #minor g path {
+    fill: black;
+  }
+  #minor g text {
+    fill: white;
+    font-size: 36px;
+  }
+  #minor g:active path {
+    fill: white;
+  }
+  #minor g:active text {
+    fill: black;
+  }
+
+  // REST CIRCLE
+  #rest g path {
+    fill: white;
+  }
+  #rest circle {
+    stroke: black;
+  }
+  #rest:active circle {
+    fill: white;
+  }
+  #rest:active g path {
+    fill: black;
+  }
+}
