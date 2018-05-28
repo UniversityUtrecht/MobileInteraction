@@ -19,7 +19,7 @@ export class MusicProvider {
   
   
   constructor() {
-	MIDIPlayer.loadPlugin({
+  MIDIPlayer.loadPlugin({
       soundfontUrl: "/assets/soundfont/",
       onprogress: function(state, progress) {
         console.log(state, progress);
@@ -55,7 +55,7 @@ export class MusicProvider {
 
   // Transform note string formatting to correct format.
   getCorrectNoteFormat(note: string) {
-	return note.charAt(0).toUpperCase() + note.slice(1).toLowerCase();
+    return note.charAt(0).toUpperCase() + note.slice(1).toLowerCase();
   }
   
   // Start playing note and measuring its play time.
@@ -66,40 +66,45 @@ export class MusicProvider {
   }
   
   // Calculate note play time and transform it to discrete time.
-  getNoteTime(start:number, end:number)
+  getNotePercentage(start:number, end:number)
   {
-	  let time:number = end - start;
-	  //let noteTime:number = Math.min(time, 1024)/2; // 512 = full 1 note, 1s = 512
-	  let noteTime:number = time/2;
-	  return noteTime;
+    let time:number = end - start;
+    let noteTime:number = time*100/2000; // 2 seconds are 100%
+    return noteTime;
   }
   
-  // Get currently playing note discrete time.
-  getCurrentPlayingNoteTime()
+  // Get currently playing note percentage. 100% is equal to the full note.
+  getCurrentPlayingNotePercentage()
   {
-	  let end:number = new Date().getTime();
-	  return this.getNoteTime(this.timeStart, end);
+    let end:number = new Date().getTime();
+    return this.getNotePercentage(this.timeStart, end);
+  }
+  
+  getNoteTime(percentage:number)
+  {
+    //return (Math.floor(percentage/(100/16))*(100/16))/100*512; // 512 = full 1 note, 1s = 512
+      return Math.ceil(percentage/6.25)*32;
   }
   
   // Stop playing note, measure time the note should be playing and add it to the internal notes list.
   stopNotePlay() {
     MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[this.note], this.delay);
     this.timeEnd = new Date().getTime();
-    this.addNote(this.note, this.getNoteTime(this.timeStart, this.timeEnd));
+    this.addNote(this.note, this.getNoteTime(this.getNotePercentage(this.timeStart, this.timeEnd)));
   }
   
   // Add note and its duration to the internal note list.
   addNote(note: string, time:number)
   {
-	this.noteList.push(note);
-	this.noteDurations.push(time);
+    this.noteList.push(note);
+    this.noteDurations.push(time);
   }
   
   // Remove last added note.
   undoLastNote()
   {
-	this.noteList.pop();
-	this.noteDurations.pop();
+    this.noteList.pop();
+    this.noteDurations.pop();
   }
   
   // Play a single note. This not is not added to the whole music sheet.
@@ -111,13 +116,13 @@ export class MusicProvider {
   // Generate MIDI format file from internal data structure.
   generateMIDITrack()
   {
-	  let file:MIDIWriter.File = new MIDIWriter.File(); 
-	  let track:MIDIWriter.Track = new MIDIWriter.Track(); 
-	  file.addTrack(track);
-	  for (let i in this.noteList) {
-		track.addNote(0, this.noteList[i], this.noteDurations[i]);
-	  }
-	  return file;
+    let file:MIDIWriter.File = new MIDIWriter.File(); 
+    let track:MIDIWriter.Track = new MIDIWriter.Track(); 
+    file.addTrack(track);
+    for (let i in this.noteList) {
+      track.addNote(0, this.noteList[i], this.noteDurations[i]);
+    }
+    return file;
   }
   
   // Plays whole music sheet.
