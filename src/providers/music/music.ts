@@ -7,6 +7,10 @@ import MIDIWriter from 'jsmidgen';
 @Injectable()
 export class MusicProvider {
   
+  minNote:number = 32; // 1/32 is the min note
+  fullNoteTime:number = 2000; // 2s is full note
+  defaultOctaveNumber:number = 4;
+  
   note:string = "c4"; // the MIDI note
   velocity:number = 255; // how hard the note hits
   delay:number = 0; // play one note every quarter second
@@ -50,7 +54,8 @@ export class MusicProvider {
     //MIDIPlayer.noteOn(0, MIDI.keyToNote["C4"], this.velocity, this.delay);
     //MIDIPlayer.noteOff(0, MIDI.keyToNote["C4"], this.delay+0.75);
     //console.log(this.track);
-    this.playWholeSheet();
+    //this.playWholeSheet();
+	console.log(MIDIPlayer.keyToNote);
   }
 
   // Transform note string formatting to correct format.
@@ -69,7 +74,7 @@ export class MusicProvider {
   getNotePercentage(start:number, end:number)
   {
     let time:number = end - start;
-    let noteTime:number = time*100/2000; // 2 seconds are 100%
+    let noteTime:number = time*100/this.fullNoteTime; // 2 seconds are 100%
     return noteTime;
   }
   
@@ -82,8 +87,7 @@ export class MusicProvider {
   
   getNoteTime(percentage:number)
   {
-    //return (Math.floor(percentage/(100/16))*(100/16))/100*512; // 512 = full 1 note, 1s = 512
-      return Math.ceil(percentage/6.25)*32;
+    return (Math.floor(percentage/(100/this.minNote))*(100/this.minNote))/100*512; // 512 = full 1 note, 1s = 512
   }
   
   // Stop playing note, measure time the note should be playing and add it to the internal notes list.
@@ -125,11 +129,44 @@ export class MusicProvider {
     return file;
   }
   
-  // Plays whole music sheet.
+  // Play whole music sheet.
   playWholeSheet() {
     MIDIPlayer.Player.currentData = this.generateMIDITrack().toBytes();
     MIDIPlayer.Player.loadMidiFile();
     MIDIPlayer.Player.stop(); 
     MIDIPlayer.Player.start();
+  }
+  
+  // Generate simple ABC notation without enforcing musical rules.
+  generateSimpleABCNotation()
+  {
+    let abc:string = "T: Cooley's\n" +
+	            "L: 1/8\n" +
+                "|: ";
+	for (let i in this.noteList) {
+	  let noteString:string = this.noteList[i].substr(0,this.noteList[i].length-1);
+	  let octave:string = "";
+      let duration:string = this.noteDurations[i]*this.minNote/512;
+	  
+	  noteString = noteString.charAt(0).toUpperCase();
+	  
+	  let octaveNumber:number = parseInt(this.noteList[i].substr(this.noteList[i].length - 1));
+	  if(octaveNumber < this.defaultOctaveNumber)
+	  {
+		  for(let j=0; j<(this.defaultOctaveNumber-octaveNumber); j++)
+			  octave += ",";
+		    
+	  }
+	  else if(octaveNumber > this.defaultOctaveNumber)
+	  {
+		  for(let j=0; j < (octaveNumber-this.defaultOctaveNumber); j++)
+		    octave += "'";
+	  }
+	  
+	  abc += noteString + octave + duration + " ";
+    }
+	
+	abc += ":|";
+	return abc;
   }
 }

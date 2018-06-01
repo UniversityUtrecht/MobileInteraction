@@ -3,6 +3,8 @@ import { NavController } from 'ionic-angular';
 import { LinearPage } from "../linear/linear";
 import { RadialPage } from "../radial/radial";
 
+import ABCJS from "abcjs";
+
 import { MusicProvider } from "../../providers/music/music"
 
 @Component({
@@ -35,4 +37,8 @@ export class HomePage {
 	this.musicCtrl.playWholeSheet();
   }
 
+  myButtonClick4() {
+    console.log("button4 clicked");
+	ABCJS.renderAbc("drawArea", this.musicCtrl.generateSimpleABCNotation());
+  }
 }
