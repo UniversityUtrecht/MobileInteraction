@@ -23,4 +23,12 @@ export class LinearPage {
     console.log('ionViewDidLoad LinearPage');
   }
 
+  startNotePlay(note) {
+    this.musicCtrl.startNotePlay(note);
+  }
+
+  stopNotePlay() {
+    this.musicCtrl.stopNotePlay()
+  }
+
 }
