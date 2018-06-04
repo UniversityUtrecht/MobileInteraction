@@ -45,52 +45,52 @@
       <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 980 80" id="piano">
         <g *ngFor="let octave of [1,2,3,4,5,6,7]; let i = index">
           <svg width="20" height="80" id="c + {{ octave }}" [attr.x]="0+140*i" y="0">
-            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay('c' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('c' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'c' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'c' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">C</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="d + {{ octave }}" [attr.x]="20+140*i" y="0">
-            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('d' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('d' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'd' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'd' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">D</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="e + {{ octave }}" [attr.x]="40+140*i" y="0">
-            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('e' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('e' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'e' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'e' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">E</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="f + {{ octave }}" [attr.x]="60+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('f' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('f' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'f' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'f' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">F</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="g + {{ octave }}" [attr.x]="80+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('g' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('g' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'g' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'g' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">G</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="a + {{ octave }}" [attr.x]="100+140*i" y="0">
-            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('a' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('a' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'a' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'a' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">A</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="b + {{ octave }}" [attr.x]="120+140*i" y="0">
-            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="musicCtrl.startNotePlay('b' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('b' + octave)" (mouseup)="stopNotePlay()"></rect>
+            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'b' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'b' + octave)" (mouseup)="stopNotePlay()"></rect>
             <text x="13%" y="90%">B</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
-          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="musicCtrl.startNotePlay('db' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('db' + octave)" (mouseup)="stopNotePlay()"></rect>
-          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="musicCtrl.startNotePlay('eb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('eb' + octave)" (mouseup)="stopNotePlay()"></rect>
-          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="musicCtrl.startNotePlay('gb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('gb' + octave)" (mouseup)="stopNotePlay()"></rect>
-          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="musicCtrl.startNotePlay('ab' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('ab' + octave)" (mouseup)="stopNotePlay()"></rect>
-          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="musicCtrl.startNotePlay('bb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay('bb' + octave)" (mouseup)="stopNotePlay()"></rect>
+          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="startNotePlay($event, 'db' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'db' + octave)" (mouseup)="stopNotePlay()"></rect>
+          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="startNotePlay($event, 'eb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'eb' + octave)" (mouseup)="stopNotePlay()"></rect>
+          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="startNotePlay($event, 'gb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'gb' + octave)" (mouseup)="stopNotePlay()"></rect>
+          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="startNotePlay($event, 'ab' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'ab' + octave)" (mouseup)="stopNotePlay()"></rect>
+          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="startNotePlay($event, 'bb' + octave)" (touchend)="musicCtrl.stopNotePlay()" (mousedown)="startNotePlay($event, 'bb' + octave)" (mouseup)="stopNotePlay()"></rect>
         </g>
       </svg></div>
   </ion-scroll>
