@@ -26,6 +26,7 @@ export class LinearPage {
   startNotePlay(event: Event, note: string) {
     // console.log(event);
     event.stopPropagation(); // avoid double-playing for touch/mouse events
+    event.preventDefault();
     this.musicCtrl.startNotePlay(note);
   }
 
