@@ -76,5 +76,9 @@
     </div>
   </ion-scroll>
   <div align="center">
-    <round-progress [current]="currentDuration" [max]="maxDuration" [radius]="30"></round-progress></div>
+    <div class="progress-bar-wrapper">
+      <div [innerHtml]="currentNoteDuration" style="top: 50%; bottom: auto; left: 50%;"></div>
+      <round-progress [current]="currentDuration" [max]="maxDuration" [semicircle]="true" [radius]="30"></round-progress>
+    </div>
+  </div>
 </ion-footer>

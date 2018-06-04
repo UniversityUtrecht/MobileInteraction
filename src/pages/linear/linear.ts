@@ -18,6 +18,7 @@ export class LinearPage {
 
   currentDuration:number = 0;
   maxDuration:number = 100;
+  currentNoteDuration:string = "0";
 
   keyPressed:boolean = false;
   timeId:number = 0;
@@ -33,18 +34,28 @@ export class LinearPage {
     this.keyPressed = true;
     this.timeId = setInterval(() => {
        this.updateBar();
-    }, 300);
+    }, 100);
   }
 
   updateBar(){
     this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage()
     /** console.log('current duration: '+ this.currentDuration); */
-  }
+    if(this.currentDuration>=0&&this.currentDuration<50){
+          this.currentNoteDuration = "1/4";
+        }
+    else if(this.currentDuration>=50&&this.currentDuration<100){
+      this.currentNoteDuration = "1/2";
+    }
+    else if(this.currentDuration>=100){
+      this.currentNoteDuration = "1";
+    }
+   }
 
   stopProgressBar(){
     this.keyPressed = false;
     clearInterval(this.timeId);
     this.currentDuration= 0;
+    this.currentNoteDuration = "0";
   }
 
   startNotePlay(event: Event, note: string) {
