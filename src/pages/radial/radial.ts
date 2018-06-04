@@ -15,12 +15,27 @@ import { MusicProvider } from "../../providers/music/music";
   templateUrl: 'radial.html',
 })
 export class RadialPage {
+  octave = 4;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RadialPage');
+  }
+
+  startNotePlay(event: Event, note: string) {
+    console.log(note + " started");
+    event.stopPropagation(); // avoid double-playing for touch/mouse events
+    event.preventDefault();
+    this.musicCtrl.startNotePlay(note);
+  }
+
+  stopNotePlay(event: Event) {
+    console.log("stopped note");
+    event.stopPropagation(); // avoid double-playing for touch/mouse events
+    event.preventDefault();
+    this.musicCtrl.stopNotePlay()
   }
 
 }
