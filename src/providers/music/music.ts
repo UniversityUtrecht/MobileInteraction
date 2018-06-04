@@ -7,7 +7,8 @@ import MIDIWriter from 'jsmidgen';
 @Injectable()
 export class MusicProvider {
 
-  minNote:number = 32; // 1/32 is the min note
+  minNote:number = 16; // 1/32 is the min note
+  noteCount:number = 5; // 16 8 4 2 1
   fullNoteTime:number = 1000; // 2s is full note
   defaultOctaveNumber:number = 4;
 
@@ -87,7 +88,21 @@ export class MusicProvider {
 
   getNoteTime(percentage:number)
   {
-    return (Math.floor(percentage/(100/this.minNote))*(100/this.minNote))/100*512; // 512 = full 1 note, 1s = 512
+	let line:number = 100;
+	
+    for(let i=0; i<this.noteCount; i++)
+	{
+		
+		if(percentage < line)
+			line /= 2;
+		else
+			break;
+	}
+	return (Math.ceil(line/(100/this.minNote))*(100/this.minNote))/100*512;
+	
+	// Old system with partial time notes
+	//return (Math.floor(percentage/(100/this.minNote))*(100/this.minNote))/100*512; // 512 = full 1 note, 1s = 512
+    
   }
 
   // Stop playing note, measure time the note should be playing and add it to the internal notes list.
@@ -141,7 +156,7 @@ export class MusicProvider {
   generateSimpleABCNotation()
   {
     let abc:string = "T: Best song\n" +
-	            "L: 1/32\n" +
+	            "L: 1/"+this.minNote+"\n" +
                 "|: ";
 	for (let i in this.noteList) {
 	  let noteString:string = this.noteList[i].substr(0,this.noteList[i].length-1);
