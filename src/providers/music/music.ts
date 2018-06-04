@@ -140,7 +140,7 @@ export class MusicProvider {
   // Generate simple ABC notation without enforcing musical rules.
   generateSimpleABCNotation()
   {
-    let abc:string = "T: Cooley's\n" +
+    let abc:string = "T: Best song\n" +
 	            "L: 1/8\n" +
                 "|: ";
 	for (let i in this.noteList) {
@@ -148,7 +148,10 @@ export class MusicProvider {
 	  let octave:string = "";
       let duration:string = String(this.noteDurations[i]*this.minNote/512);
 
-	  noteString = noteString.charAt(0).toUpperCase();
+	  let finalNote:string = "";
+	  if(noteString.charAt(1).toLowerCase() == "b")
+        finalNote = "^";
+	  finalNote += noteString.charAt(0).toUpperCase();
 
 	  let octaveNumber:number = parseInt(this.noteList[i].substr(this.noteList[i].length - 1));
 	  if(octaveNumber < this.defaultOctaveNumber)
@@ -163,7 +166,7 @@ export class MusicProvider {
 		    octave += "'";
 	  }
 
-	  abc += noteString + octave + duration + " ";
+	  abc += finalNote + octave + duration + " ";
     }
 
 	abc += ":|";
