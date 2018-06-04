@@ -16,11 +16,35 @@ import { MusicProvider } from "../../providers/music/music";
 })
 export class LinearPage {
 
+  currentDuration:number = 0;
+  maxDuration:number = 100;
+
+  keyPressed:boolean = false;
+  timeId:number = 0;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
+  }
+
+  updateDurationProgressBar(){
+    this.keyPressed = true;
+    this.timeId = setInterval(() => {
+       this.updateBar();
+    }, 300);
+  }
+
+  updateBar(){
+    this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage()
+    /** console.log('current duration: '+ this.currentDuration); */
+  }
+
+  stopProgressBar(){
+    this.keyPressed = false;
+    clearInterval(this.timeId);
+    this.currentDuration= 0;
   }
 
   startNotePlay(event: Event, note: string) {
