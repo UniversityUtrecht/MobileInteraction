@@ -8,7 +8,7 @@ import MIDIWriter from 'jsmidgen';
 export class MusicProvider {
 
   minNote:number = 32; // 1/32 is the min note
-  fullNoteTime:number = 2000; // 2s is full note
+  fullNoteTime:number = 1000; // 2s is full note
   defaultOctaveNumber:number = 4;
 
   note:string = "c4"; // the MIDI note
@@ -141,7 +141,7 @@ export class MusicProvider {
   generateSimpleABCNotation()
   {
     let abc:string = "T: Best song\n" +
-	            "L: 1/8\n" +
+	            "L: 1/32\n" +
                 "|: ";
 	for (let i in this.noteList) {
 	  let noteString:string = this.noteList[i].substr(0,this.noteList[i].length-1);
