@@ -18,6 +18,12 @@ page-linear {
   .white:active {
     fill: grey;
   }
+  .undo-button {
+    fill: black;
+  }
+  .undo-button:active {
+    fill: red;
+  }
   .black {
     fill: black;
     stroke-width: 1;
@@ -25,5 +31,9 @@ page-linear {
   }
   .black:active {
     fill: grey;
+  }
+  .wide-as-needed {
+    overflow: scroll;
+    white-space: nowrap;
   }
 }

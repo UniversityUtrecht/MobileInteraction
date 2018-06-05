@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 
+import ABCJS from "abcjs";
+
 /**
  * Generated class for the LinearPage page.
  *
@@ -28,6 +30,7 @@ export class LinearPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
   }
 
   updateDurationProgressBar(){
@@ -58,6 +61,11 @@ export class LinearPage {
     this.currentNoteDuration = "0";
   }
 
+  undoNote() {
+    this.musicCtrl.undoLastNote();
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
+  }
+
   startNotePlay(event: Event, note: string) {
     console.log(note + " started");
     event.stopPropagation(); // avoid double-playing for touch/mouse events
@@ -69,7 +77,7 @@ export class LinearPage {
     console.log("stopped note");
     event.stopPropagation(); // avoid double-playing for touch/mouse events
     event.preventDefault();
-    this.musicCtrl.stopNotePlay()
+    this.musicCtrl.stopNotePlay();
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
   }
-
 }
