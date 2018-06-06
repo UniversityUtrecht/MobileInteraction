@@ -2,4 +2,38 @@ page-linear {
   #piano text {
     pointer-events: none;
   }
+  .octaveNum {
+    font-size: .7em;
+  }
+
+  #piano-container {
+    width: 250vw;
+  }
+
+  .white {
+    fill: white;
+    stroke-width: 1;
+    stroke: grey;
+  }
+  .white:active {
+    fill: grey;
+  }
+  .undo-button {
+    fill: black;
+  }
+  .undo-button:active {
+    fill: red;
+  }
+  .black {
+    fill: black;
+    stroke-width: 1;
+    stroke: black;
+  }
+  .black:active {
+    fill: grey;
+  }
+  .wide-as-needed {
+    overflow: scroll;
+    white-space: nowrap;
+  }
 }
