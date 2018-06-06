@@ -43,9 +43,12 @@ export class LinearPage {
   updateBar(){
     this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage()
     /** console.log('current duration: '+ this.currentDuration); */
-    if(this.currentDuration>=0&&this.currentDuration<50){
-          this.currentNoteDuration = "1/4";
-        }
+    if(this.currentDuration>=0&&this.currentDuration<25){
+      this.currentNoteDuration = "1/8";
+    }
+    else if (this.currentDuration>=25&&this.currentDuration<50){
+      this.currentNoteDuration = "1/4";
+    }
     else if(this.currentDuration>=50&&this.currentDuration<100){
       this.currentNoteDuration = "1/2";
     }
