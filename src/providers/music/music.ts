@@ -7,8 +7,8 @@ import MIDIWriter from 'jsmidgen';
 @Injectable()
 export class MusicProvider {
 
-  minNote:number = 16; // 1/32 is the min note
-  noteCount:number = 5; // 16 8 4 2 1
+  minNote:number = 8; // 1/32 is the min note
+  noteCount:number = 4; // 8 4 2 1
   fullNoteTime:number = 1000; // 2s is full note
   defaultOctaveNumber:number = 4;
 
@@ -31,6 +31,7 @@ export class MusicProvider {
       },
       onsuccess: function() {
         MIDIPlayer.setVolume(0, 255);
+		MIDIPlayer.BPM = 80;
       }
     });
   }
@@ -155,9 +156,8 @@ export class MusicProvider {
   // Generate simple ABC notation without enforcing musical rules.
   generateSimpleABCNotation()
   {
-    let abc:string = "T: Best song\n" +
-	            "L: 1/"+this.minNote+"\n" +
-                "|: ";
+    let abc:string = "L: 1/"+this.minNote+"\n" +
+                "[| ";
 	for (let i in this.noteList) {
 	  let noteString:string = this.noteList[i].substr(0,this.noteList[i].length-1);
 	  let octave:string = "";
@@ -184,7 +184,7 @@ export class MusicProvider {
 	  abc += finalNote + octave + duration + " ";
     }
 
-	abc += ":|";
+	abc += "|]";
 	return abc;
   }
 }
