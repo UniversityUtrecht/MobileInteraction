@@ -30,7 +30,7 @@ export class LinearPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
   }
 
   updateDurationProgressBar(){
@@ -66,7 +66,7 @@ export class LinearPage {
 
   undoNote() {
     this.musicCtrl.undoLastNote();
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
   }
 
   startNotePlay(event: Event, note: string) {
@@ -81,6 +81,6 @@ export class LinearPage {
     event.stopPropagation(); // avoid double-playing for touch/mouse events
     event.preventDefault();
     this.musicCtrl.stopNotePlay();
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation());
+    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
   }
 }
