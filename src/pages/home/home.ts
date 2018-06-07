@@ -41,4 +41,16 @@ export class HomePage {
     console.log("button4 clicked");
 	ABCJS.renderAbc("drawArea", this.musicCtrl.generateSimpleABCNotation());
   }
+  
+  myButtonClick5() {
+    console.log("button5 clicked");
+	var audio = new Audio('/assets/sound/Listening_task_1.mp3');
+	audio.play();
+  }
+  
+  myButtonClick6() {
+    console.log("button6 clicked");
+	var audio = new Audio('/assets/sound/Listening_task_2.mp3');
+	audio.play();
+  }
 }

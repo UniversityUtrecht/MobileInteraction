@@ -38,25 +38,6 @@ export class MusicProvider {
 
   // Test function, ignore it.
   test() {
-    //var file = new MIDIWriter.File();
-    //var track = new MIDIWriter.Track();
-    //
-
-    // 128 = 1/4 note
-    //this.track.addNote(0, 'C4', 64);
-    //this.track.addNote(0, 'D4', 64);
-    //this.track.addNote(0, 'E4', 64);
-    //this.track.addNote(0, 'F4', 64);
-    //this.track.addNote(0, 'g4', 64);
-    //this.track.addNote(0, 'a4', 64);
-    //this.track.addNote(0, 'b4', 64);
-    //this.track.addNote(0, 'c5', 64);
-
-
-    //MIDIPlayer.noteOn(0, MIDI.keyToNote["C4"], this.velocity, this.delay);
-    //MIDIPlayer.noteOff(0, MIDI.keyToNote["C4"], this.delay+0.75);
-    //console.log(this.track);
-    //this.playWholeSheet();
 	console.log(MIDIPlayer.keyToNote);
   }
 
@@ -87,6 +68,7 @@ export class MusicProvider {
     return this.getNotePercentage(this.timeStart, end);
   }
 
+  // Get discrete note time which corresponts to only 'clean' notes (1/1, 1/2, 1/4,...).
   getNoteTime(percentage:number)
   {
 	let line:number = 100;
