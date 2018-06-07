@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
+import { DatabaseProvider } from "../../providers/database/database";
 
 import ABCJS from "abcjs";
+
 
 /**
  * Generated class for the RadialPage page.
@@ -26,7 +28,7 @@ export class RadialPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider) {
   }
 
   ionViewDidLoad() {
@@ -83,6 +85,18 @@ export class RadialPage {
       event.preventDefault();
       this.musicCtrl.stopNotePlay();
       ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+  }
+
+  finish() {
+    // Send results to log server
+    this.db.upload(
+      {"finalSheetMusic": this.musicCtrl.generateSimpleABCNotation()}
+      );
+
+    // TODO: Purge sheet music
+
+    // Return to main menu
+    this.navCtrl.pop();
   }
 
 }

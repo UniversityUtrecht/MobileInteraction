@@ -20,6 +20,12 @@
   <button ion-button (click)="myButtonClick5()">1.&#9658;</button>
   <button ion-button (click)="myButtonClick6()">2.&#9658;</button>
   
+  <button ion-button (click)="fullReset()">Reset</button>
+
   <div id="drawArea">I am a music notation.</div>
   
 </ion-content>
+
+<ion-footer>
+  <p id="userName">{{ this.db.userID | async }}</p>
+</ion-footer>
