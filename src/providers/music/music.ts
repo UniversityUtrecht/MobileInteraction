@@ -21,6 +21,7 @@ export class MusicProvider {
 
   noteList: string[] = [];
   noteDurations: number[] = [];
+  undoCount: number = 0;
 
 
   constructor() {
@@ -107,11 +108,13 @@ export class MusicProvider {
   {
     this.noteList.pop();
     this.noteDurations.pop();
+    this.undoCount = this.undoCount + 1;
   }
 
   purge() {
     this.noteList = [];
     this.noteDurations = [];
+    this.undoCount = 0;
   }
 
   // Play a single note. This not is not added to the whole music sheet.
@@ -173,5 +176,12 @@ export class MusicProvider {
 
 	abc += "|]";
 	return abc;
+  }
+
+  getCurrentPerformance() {
+    return {
+      finalSheetMusic: this.generateSimpleABCNotation(),
+      undoCount: this.undoCount
+    }
   }
 }

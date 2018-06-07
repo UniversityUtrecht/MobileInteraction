@@ -49,7 +49,7 @@ export class RadialPage {
   }
 
   updateBar(){
-    this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage()
+    this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage();
     /** console.log('current duration: '+ this.currentDuration); */
     if(this.currentDuration>=0&&this.currentDuration<25){
         this.currentNoteDuration = "1/8";
@@ -89,9 +89,7 @@ export class RadialPage {
 
   finish() {
     // Send results to log server
-    this.db.upload(
-      {"finalSheetMusic": this.musicCtrl.generateSimpleABCNotation()}
-      );
+    this.db.upload(this.musicCtrl.getCurrentPerformance());
 
     // Purge sheet music
     this.musicCtrl.purge();
