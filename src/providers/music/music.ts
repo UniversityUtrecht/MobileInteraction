@@ -22,7 +22,7 @@ export class MusicProvider {
   noteList: string[] = [];
   noteDurations: number[] = [];
   undoCount: number = 0;
-
+  overallStartTime:number=0;
 
   constructor() {
   MIDIPlayer.loadPlugin({
@@ -49,9 +49,16 @@ export class MusicProvider {
 
   // Start playing note and measuring its play time.
   startNotePlay(note:string) {
+    // If first note, store starting time
+    console.log(this.noteList);
+    if (this.noteList.length === 0) {
+      this.overallStartTime = Date.now();
+    }
+
     this.timeStart = new Date().getTime();
     this.note = this.getCorrectNoteFormat(note);
     MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.note], this.velocity, this.delay);
+
   }
 
   // Calculate note play time and transform it to discrete time.
@@ -179,9 +186,13 @@ export class MusicProvider {
   }
 
   getCurrentPerformance() {
+    console.log(Date.now());
+    console.log(this.overallStartTime);
+    console.log((Date.now() - this.overallStartTime) / 1000);
     return {
       finalSheetMusic: this.generateSimpleABCNotation(),
-      undoCount: this.undoCount
+      undoCount: this.undoCount,
+      timeTaken: (Date.now() - this.overallStartTime) / 1000
     }
   }
 }
