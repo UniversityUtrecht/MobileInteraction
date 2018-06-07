@@ -21,6 +21,7 @@ export class HomePage {
 
   fullReset() {
     this.db.setRandomUserID();
+    this.musicCtrl.purge();
   }
 
   myButtonClick() {

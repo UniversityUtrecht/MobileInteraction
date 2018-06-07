@@ -72,20 +72,20 @@ export class MusicProvider {
   getNoteTime(percentage:number)
   {
 	let line:number = 100;
-	
+
     for(let i=0; i<this.noteCount; i++)
 	{
-		
+
 		if(percentage < line)
 			line /= 2;
 		else
 			break;
 	}
 	return (Math.ceil(line/(100/this.minNote))*(100/this.minNote))/100*512;
-	
+
 	// Old system with partial time notes
 	//return (Math.floor(percentage/(100/this.minNote))*(100/this.minNote))/100*512; // 512 = full 1 note, 1s = 512
-    
+
   }
 
   // Stop playing note, measure time the note should be playing and add it to the internal notes list.
@@ -107,6 +107,11 @@ export class MusicProvider {
   {
     this.noteList.pop();
     this.noteDurations.pop();
+  }
+
+  purge() {
+    this.noteList = [];
+    this.noteDurations = [];
   }
 
   // Play a single note. This not is not added to the whole music sheet.

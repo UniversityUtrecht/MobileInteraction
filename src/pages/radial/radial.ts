@@ -93,7 +93,8 @@ export class RadialPage {
       {"finalSheetMusic": this.musicCtrl.generateSimpleABCNotation()}
       );
 
-    // TODO: Purge sheet music
+    // Purge sheet music
+    this.musicCtrl.purge();
 
     // Return to main menu
     this.navCtrl.pop();
