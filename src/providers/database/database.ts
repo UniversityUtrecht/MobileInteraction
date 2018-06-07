@@ -3,6 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { BehaviorSubject } from 'rxjs/Rx';
 import randomWords from 'random-words';
 
+export enum PianoType {radial="radial", linear="linear"}
 
 /*
   Generated class for the DatabaseProvider provider.
@@ -26,7 +27,7 @@ export class DatabaseProvider {
     this.userID = new BehaviorSubject("NOT_SET");
   }
 
-  upload(object: Object) {
-    this.firebase.collection("radial").doc(this.userID.getValue()).set(object);
+  upload(type: PianoType, object: Object) {
+    this.firebase.collection(type).doc(this.userID.getValue()).set(object);
   }
 }

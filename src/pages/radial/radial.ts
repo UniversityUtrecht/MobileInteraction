@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
-import { DatabaseProvider } from "../../providers/database/database";
+import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
 import ABCJS from "abcjs";
 
@@ -89,7 +89,7 @@ export class RadialPage {
 
   finish() {
     // Send results to log server
-    this.db.upload(this.musicCtrl.getCurrentPerformance());
+    this.db.upload(PianoType.radial, this.musicCtrl.getCurrentPerformance());
 
     // Purge sheet music
     this.musicCtrl.purge();

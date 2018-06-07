@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 
 import ABCJS from "abcjs";
+import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
 /**
  * Generated class for the LinearPage page.
@@ -25,7 +26,7 @@ export class LinearPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider) {
   }
 
   ionViewDidLoad() {
@@ -82,5 +83,16 @@ export class LinearPage {
     event.preventDefault();
     this.musicCtrl.stopNotePlay();
     ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+  }
+
+  finish() {
+    // Send results to log server
+    this.db.upload(PianoType.linear, this.musicCtrl.getCurrentPerformance());
+
+    // Purge sheet music
+    this.musicCtrl.purge();
+
+    // Return to main menu
+    this.navCtrl.pop();
   }
 }
