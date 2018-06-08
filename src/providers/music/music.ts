@@ -162,7 +162,7 @@ export class MusicProvider {
 
 	  let finalNote:string = "";
 	  if(noteString.charAt(1).toLowerCase() == "b")
-        finalNote = "^";
+        finalNote = "_";
 	  finalNote += noteString.charAt(0).toUpperCase();
 
 	  let octaveNumber:number = parseInt(this.noteList[i].substr(this.noteList[i].length - 1));
