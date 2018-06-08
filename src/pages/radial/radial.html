@@ -62,7 +62,7 @@
     </g>
   </g>
   <g id="minor">
-    <g id="F_x2F_G"  (touchstart)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
+    <g id="F_x2F_G"  (touchstart)="startNotePlay($event, 'gb' + octaveHeights['f']);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'gb' + octaveHeights['f']);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
       <path d="M232.9,44l45.6,94.7c-40.7,20.2-76.3,49.1-104.4,84.3c-28.1,35.2-48.7,76.7-59.3,122L10.8,321.3
         C39.2,198.7,121.9,96.9,232.2,42.6L232.9,44z"/>
       <text transform="matrix(1 0 0 1 85.3176 214.765)">F</text>
@@ -75,7 +75,7 @@
         c-5.3,22.7-8.1,46.4-8.1,70.7c0,23.6,2.7,46.7,7.7,68.8C124.8,530,145.2,571.8,173.2,607.2z"/>
       <text transform="matrix(1 0 0 1 44.3501 506.089)">&lt;-</text>
     </g>
-    <g id="D_x2F_E"  (touchstart)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
+    <g id="D_x2F_E"  (touchstart)="startNotePlay($event, 'eb' + octaveHeights['d']);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'eb' + octaveHeights['d']);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
       <path d="M415.7,724.7v106.7c-132.1,0-249.8-61.6-326-157.7l0,0l83.4-66.6c28.9,36.6,66,66.5,108.4,87
         C322.2,713.8,367.7,724.7,415.7,724.7z"/>
       <text transform="matrix(1 0 0 1 226.804 750.1432)">D</text>
@@ -83,7 +83,7 @@
       <text transform="matrix(1 0 0 1 255.2982 750.1432)">/E</text>
       <text transform="matrix(0.583 0 0 0.583 291.2982 738.1554)">♭</text>
     </g>
-    <g id="C_x2F_D"  (touchstart)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
+    <g id="C_x2F_D"  (touchstart)="startNotePlay($event, 'db' + octaveHeights['c']);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'db' + octaveHeights['c']);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
       <path d="M658.3,607.1l83.5,66.5c-76.1,96.2-193.9,157.8-326.1,157.8V724.7c48,0,93.5-11,134.1-30.5
         C592.3,673.7,629.4,643.8,658.3,607.1z"/>
       <text transform="matrix(1 0 0 1 542.75 750.1427)">C</text>
@@ -96,7 +96,7 @@
         c28-35.4,48.3-77.1,58.7-122.6c5-22.1,7.7-45.1,7.7-68.8c0-23.7-2.7-46.7-7.7-68.8L821.1,323.2z"/>
       <text transform="matrix(1 0 0 1 748.2905 506.0892)">-&gt;</text>
     </g>
-    <g id="A_x2F_B" (touchstart)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
+    <g id="A_x2F_B" (touchstart)="startNotePlay($event, 'bb' + octaveHeights['a']);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'bb' + octaveHeights['a']);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
       <path d="M821.1,323.2L717,346.9c-10.5-46-31.2-88.2-59.7-123.9c-28.1-35.2-63.8-64.1-104.5-84.3v0L598.4,44l0.7-1.4
         C710,97.2,793,199.7,821.1,323.2z"/>
       <text transform="matrix(1 0 0 1 664.4318 212.3319)">A</text>
@@ -104,7 +104,7 @@
       <text transform="matrix(1 0 0 1 692.926 212.3319)">/B</text>
       <text transform="matrix(0.583 0 0 0.583 728.926 200.3441)">♭</text>
     </g>
-    <g id="G_x2F_A"  (touchstart)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
+    <g id="G_x2F_A"  (touchstart)="startNotePlay($event, 'ab' + octaveHeights['g']);updateDurationProgressBar()" (touchend)="stopNotePlay($event);stopProgressBar()" (mousedown)="startNotePlay($event, 'ab' + octaveHeights['g']);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()">
       <path d="M599.2,42.5l-0.7,1.4l-45.6,94.8c-41.3-20.5-87.9-32-137.1-32c-49.3,0-95.9,11.5-137.2,32L232.9,44l-0.7-1.5
         C287.6,15.3,349.9,0,415.7,0C481.6,0,543.8,15.3,599.2,42.5z"/>
       <text transform="matrix(1 0 0 1 383.1284 77.8461)">G</text>
