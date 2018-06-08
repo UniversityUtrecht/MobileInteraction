@@ -19,7 +19,56 @@ import ABCJS from "abcjs";
   templateUrl: 'radial.html',
 })
 export class RadialPage {
-  octave = 4;
+  octaveHeights: object = {
+    "c": 4,
+    "d": 4,
+    "e": 4,
+    "f": 4,
+    "g": 4,
+    "a": 3,
+    "b": 3
+  };
+
+  moveOneRight() {
+    if (this.octaveHeights["c"] === this.octaveHeights["b"]) {
+      this.octaveHeights["c"]++;
+    } else {
+      let lastHeight = -1;
+      for (let key in this.octaveHeights) {
+        if (lastHeight > this.octaveHeights[key]) {
+          // stop if key does not exist (c8 is highest possible)
+          if(this.octaveHeights[key] === 7 && key === "d") {
+            return;
+          }
+          this.octaveHeights[key] = this.octaveHeights[key]+1;
+          return;
+        } else {
+          lastHeight = this.octaveHeights[key];
+        }
+      }
+    }
+  }
+  moveOneLeft() {
+    if (this.octaveHeights["b"] === this.octaveHeights["c"]) {
+      this.octaveHeights["b"]--;
+    } else {
+      let lastHeight = -1;
+      let lastKey = "";
+      for (let key in this.octaveHeights) {
+        if (lastHeight > this.octaveHeights[key]) {
+          // stop if key does not exist (b0 is lowest possible)
+          if(this.octaveHeights[key] === 0 && key === "a") {
+            return;
+          }
+          this.octaveHeights[lastKey] = this.octaveHeights[lastKey]-1;
+          return;
+        } else {
+          lastHeight = this.octaveHeights[key];
+          lastKey = key;
+        }
+      }
+    }
+  }
 
   currentDuration:number = 0;
   maxDuration:number = 100;
