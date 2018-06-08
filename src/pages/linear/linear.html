@@ -31,52 +31,52 @@
       <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 980 80" id="piano">
         <g *ngFor="let octave of [1,2,3,4,5,6,7]; let i = index">
           <svg width="20" height="80" id="c + {{ octave }}" [attr.x]="0+140*i" y="0">
-            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'c' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'c' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'c' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">C</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="d + {{ octave }}" [attr.x]="20+140*i" y="0">
-            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'd' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'd' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'd' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">D</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="e + {{ octave }}" [attr.x]="40+140*i" y="0">
-            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'e' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'e' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'e' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">E</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="f + {{ octave }}" [attr.x]="60+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'f' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'f' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'f' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">F</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="g + {{ octave }}" [attr.x]="80+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'g' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'g' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'g' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">G</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="a + {{ octave }}" [attr.x]="100+140*i" y="0">
-            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'a' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'a' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'a' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
             <text x="13%" y="90%">A</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="b + {{ octave }}" [attr.x]="120+140*i" y="0">
-            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'b' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event);" (mousedown)="startNotePlay($event, 'b' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'b' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event);">
             <text x="13%" y="90%">B</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
-          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
-          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
-          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
-          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
-          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
+          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
+          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
+          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
+          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)">
         </g>
       </svg></div>
     <div align="center">
