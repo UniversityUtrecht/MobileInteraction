@@ -29,7 +29,7 @@ export class RadialPage {
     "b": 3
   };
 
-  moveOneRight() {
+  moveOneUp() {
     if (this.octaveHeights["c"] === this.octaveHeights["b"]) {
       this.octaveHeights["c"]++;
     } else {
@@ -48,7 +48,7 @@ export class RadialPage {
       }
     }
   }
-  moveOneLeft() {
+  moveOneDown() {
     if (this.octaveHeights["b"] === this.octaveHeights["c"]) {
       this.octaveHeights["b"]--;
     } else {
@@ -67,6 +67,26 @@ export class RadialPage {
           lastKey = key;
         }
       }
+    }
+  }
+  moveAllUp() {
+    // Check if valid
+    if(this.octaveHeights["c"] === 7) {
+      return;
+    }
+
+    for (let key in this.octaveHeights) {
+      this.octaveHeights[key] = this.octaveHeights[key]+1;
+    }
+  }
+  moveAllDown() {
+    // Check if valid
+    if(this.octaveHeights["g"] === 2) {
+      return;
+    }
+
+    for (let key in this.octaveHeights) {
+      this.octaveHeights[key] = this.octaveHeights[key]-1;
     }
   }
 
