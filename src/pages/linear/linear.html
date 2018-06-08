@@ -8,73 +8,85 @@
 
   <ion-navbar>
     <ion-title>Linear</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="finish()">Done</button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-  <style>
-		#piano-container {
-			width: 250vw;
-		}
-		.white {
-			fill: white;
-			stroke-width: 1;
-			stroke: grey
-		}
-		.black {
-			fill: black;
-			stroke-width: 1;
-			stroke: black
-		}
-	</style>
-
+<ion-content>
+  <ion-scroll scrollX="true" style = "width: 100%; height: 35vh;">
+    <div id="drawScore"></div>
+  </ion-scroll>
+  <div id="undo" align="right" style="width: 90%; height: 100%;">
+  <svg class="undo-button" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" (click)="undoNote()">
+    <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54
+     0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></div>
 
 </ion-content>
 
 <ion-footer>
   <ion-scroll scrollX="true" style = "width: 100%; height: 30vh">
     <div id="piano-container">
-      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 420 80" id="piano">
-        <g>
-          <rect class="white c" data-note="c3" width="20" height="80" x="0" y="0"></rect>
-          <rect class="white d" data-note="d3" width="20" height="80" x="20" y="0"></rect>
-          <rect class="white e" data-note="e3" width="20" height="80" x="40" y="0"></rect>
-          <rect class="white f" data-note="f3" width="20" height="80" x="60" y="0"></rect>
-          <rect class="white g" data-note="g3" width="20" height="80" x="80" y="0"></rect>
-          <rect class="white a" data-note="a3" width="20" height="80" x="100" y="0"></rect>
-          <rect class="white b" data-note="b3" width="20" height="80" x="120" y="0"></rect>
-          <rect class="black cs" data-note="cs3" width="16" height="50" x="12" y="0"></rect>
-          <rect class="black ds" data-note="ds3" width="16" height="50" x="32" y="0"></rect>
-          <rect class="black fs" data-note="fs3" width="16" height="50" x="72" y="0"></rect>
-          <rect class="black gs" data-note="gs3" width="16" height="50" x="92" y="0"></rect>
-          <rect class="black as" data-note="as3" width="16" height="50" x="112" y="0"></rect>
-          <rect class="white c" data-note="c4" width="20" height="80" x="140" y="0"></rect>
-          <rect class="white d" data-note="d4" width="20" height="80" x="160" y="0"></rect>
-          <rect class="white e" data-note="e4" width="20" height="80" x="180" y="0"></rect>
-          <rect class="white f" data-note="f4" width="20" height="80" x="200" y="0"></rect>
-          <rect class="white g" data-note="g4" width="20" height="80" x="220" y="0"></rect>
-          <rect class="white a" data-note="a4" width="20" height="80" x="240" y="0"></rect>
-          <rect class="white b" data-note="b4" width="20" height="80" x="260" y="0"></rect>
-          <rect class="black cs" data-note="cs4" width="16" height="50" x="152" y="0"></rect>
-          <rect class="black ds" data-note="ds4" width="16" height="50" x="172" y="0"></rect>
-          <rect class="black fs" data-note="fs4" width="16" height="50" x="212" y="0"></rect>
-          <rect class="black gs" data-note="gs4" width="16" height="50" x="232" y="0"></rect>
-          <rect class="black as" data-note="as4" width="16" height="50" x="252" y="0"></rect>
-          <rect class="white c" data-note="c5" width="20" height="80" x="280" y="0"></rect>
-          <rect class="white d" data-note="d5" width="20" height="80" x="300" y="0"></rect>
-          <rect class="white e" data-note="e5" width="20" height="80" x="320" y="0"></rect>
-          <rect class="white f" data-note="f5" width="20" height="80" x="340" y="0"></rect>
-          <rect class="white g" data-note="g5" width="20" height="80" x="360" y="0"></rect>
-          <rect class="white a" data-note="a5" width="20" height="80" x="380" y="0"></rect>
-          <rect class="white b" data-note="b5" width="20" height="80" x="400" y="0"></rect>
-          <rect class="black cs" data-note="cs5" width="16" height="50" x="292" y="0"></rect>
-          <rect class="black ds" data-note="ds5" width="16" height="50" x="312" y="0"></rect>
-          <rect class="black fs" data-note="fs5" width="16" height="50" x="352" y="0"></rect>
-          <rect class="black gs" data-note="gs5" width="16" height="50" x="372" y="0"></rect>
-          <rect class="black as" data-note="as5" width="16" height="50" x="392" y="0"></rect>
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 980 80" id="piano">
+        <g *ngFor="let octave of [1,2,3,4,5,6,7]; let i = index">
+          <svg width="20" height="80" id="c + {{ octave }}" [attr.x]="0+140*i" y="0">
+            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'c' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'c' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">C</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="d + {{ octave }}" [attr.x]="20+140*i" y="0">
+            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'd' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'd' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">D</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="e + {{ octave }}" [attr.x]="40+140*i" y="0">
+            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'e' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'e' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">E</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="f + {{ octave }}" [attr.x]="60+140*i" y="0">
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'f' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'f' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">F</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="g + {{ octave }}" [attr.x]="80+140*i" y="0">
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'g' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'g' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">G</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="a + {{ octave }}" [attr.x]="100+140*i" y="0">
+            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'a' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'a' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">A</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <svg width="20" height="80" id="b + {{ octave }}" [attr.x]="120+140*i" y="0">
+            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'b' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event);" (mousedown)="startNotePlay($event, 'b' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+            <text x="13%" y="90%">B</text>
+            <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
+          </svg>
+
+          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'db' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'eb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'gb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'ab' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
+          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (touchend)="stopProgressBar();stopNotePlay($event)" (mousedown)="startNotePlay($event, 'bb' + octave);updateDurationProgressBar()" (mouseup)="stopNotePlay($event);stopProgressBar()"></rect>
         </g>
       </svg></div>
+    <div align="center">
+      Slide finger here to scroll left/right
+    </div>
   </ion-scroll>
+  <div align="center">
+    <div class="progress-bar-wrapper">
+      <div [innerHtml]="currentNoteDuration" style="top: 50%; bottom: auto; left: 50%;"></div>
+      <round-progress [current]="currentDuration" [max]="maxDuration" [semicircle]="true" [radius]="30"></round-progress>
+    </div>
+  </div>
 </ion-footer>
