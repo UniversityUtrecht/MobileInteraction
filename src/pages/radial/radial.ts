@@ -114,42 +114,19 @@ function createDial(){
         function(n){document.addEventListener(n, mouseMove);});
       element.addEventListener("contextmenu", function (e) {e.preventDefault();}, false);
     }
-    mouse.mouseStart = startMouse;
+    mouse.startMouse = startMouse;
     return mouse;
   })();
   if(typeof canvas !== "undefined"){
-    mouse.mouseStart(canvas);
+    mouse.startMouse(canvas);
   }else{
-    mouse.mouseStart();
+    mouse.startMouse();
   }
   /** MouseFull.js end **/
-  /** ImageTools.js begin **/
-  var imageTools = (function(){
-    var iT = {
-      canvas:function(w,h){var c=document.createElement("canvas");c.width=w;c.height=h;return c;},
-      createImage:function(w,h){var i=iT.canvas(w,h);i.ctx=i.getContext("2d");return i;},
-      loadImage:function(url,cb){var i=new Image();i.src=url;i.addEventListener('load',cb);return i;},
-      image2Canvas:function(ig){var i=iT.canvas(ig.width,ig.height);i.ctx=i.getContext("2d");i.drawImage(ig,0,0);return i;},
-      imageData:function(img){return (img.ctx||(iT.image2Canvas(img).ctx)).getImageData(0,0,img.width,img.height).data;},
-      saveAsPNG:function(image,filename){ // No IE <11 support. Chrome URL bug for large files may crash
-        var ac,e;
-        if(image.toDataURL === undefined){ image = it.image2Canvas(image);}
-        ac = document.createElement('a'); ac.href = image.toDataURL(); ac.download = filename+".png";
-        // need to update this as it has depreciated.
-        if (document.createEvent) {
-          (e = document.createEvent("MouseEvents")).initMouseEvent("click", true, true, window,0, 0, 0, 0, 0, false, false, false,false, 0, null);
-          ac.dispatchEvent(e);
-        }
-      }
-    };
-    return iT;
-  })();
-
-  /** ImageTools.js end **/
 
   var w = canvas.width;
   var h = canvas.height;
-  var ix = Math.ceil(Math.min(w, h) / 20);
+  // var ix = Math.ceil(Math.min(w, h) / 20);
   const PI2 = Math.PI * 2;
 
 
@@ -223,7 +200,7 @@ function createDial(){
   // Update by checking mouse position and setting cursor and controling the dragging
   // circular control needs to be bound to a circular control object
   function updateCircularControl(){
-    var r, r1, r2, x, y, dist, ang, a, w, h, mouseOver;
+    var r, r1, r2, x, y, dist, ang, a, w, mouseOver;
     r = this.radius1;
     r1 = this.radius2;
     w = Math.abs(r - r1);
