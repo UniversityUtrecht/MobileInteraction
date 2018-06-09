@@ -4,6 +4,373 @@ import { MusicProvider } from "../../providers/music/music";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
 import ABCJS from "abcjs";
+import { BehaviorSubject } from "rxjs/Rx";
+
+let dialValue: BehaviorSubject<number>;
+
+/**
+ * If value > 0, return 1. Else return 0.
+ */
+function turnBinary(value: number) {
+  if (value > 0) {
+    return 1;
+  } else {
+    return 0
+  }
+}
+
+/**
+ * This function was taken from:
+ * https://stackoverflow.com/a/34663032
+ */
+function createDial(){
+
+  /** fullScreenCanvas.js begin **/
+  var canvas = (function(){
+    var centerCircleBB = document.getElementById("rest_x5F_s").getBoundingClientRect();
+    var canvas: any = document.getElementById("canv");
+    if(canvas !== null){
+      document.body.removeChild(canvas);
+    }
+    // creates a blank image with 2d context
+    canvas = document.createElement("canvas");
+    canvas.id = "canv";
+    // canvas.style.background = "#AAA";
+    canvas.width = centerCircleBB['width'];
+    canvas.height = centerCircleBB['height'];
+    canvas.style.position = "absolute";
+    // console.log(centerCircleBB); // DEBUG
+    canvas.style.top = centerCircleBB['top'] + "px";
+    canvas.style.left = centerCircleBB['left'] + "px";
+    canvas.style.zIndex = 1000;
+    canvas.ctx = canvas.getContext("2d");
+    document.body.appendChild(canvas);
+    return canvas;
+  })();
+  var ctx = canvas.ctx;
+
+  /** fullScreenCanvas.js end **/
+  /** MouseFull.js begin **/
+
+  var canvasMouseCallBack = undefined;  // if needed
+  var mouse = (function(){
+    function cursorControl(cursor){
+      if(cursor !== this.lastCursor){
+        if(cursor !== "default"){
+          this.lastCursor = cursor;
+        }
+      }
+    }
+    function update(){
+      if(this.element !== undefined){
+        this.element.style.cursor = this.lastCursor;
+        this.lastCursor = "default";
+      }
+    }
+    var mouse = {
+      x : 0, y : 0, w : 0, alt : false, shift : false, ctrl : false,
+      interfaceId : 1, buttonLastRaw : 0,  buttonRaw : 0,
+      over : false,  // mouse is over the element
+      bm : [1, 2, 4, 6, 5, 3], // masks for setting and clearing button raw bits;
+      getInterfaceId : function () { return this.interfaceId++; }, // For UI functions
+      mousePrivate : 0,
+      lastCursor: "default",
+      setCursor : cursorControl,
+      frameEnd : update,
+      startMouse:undefined,
+      element : undefined,
+    };
+    function mouseMove(e) {
+      var t = e.type, m = mouse;
+      m.x = e.offsetX; m.y = e.offsetY;
+      if (m.x === undefined) { m.x = e.clientX; m.y = e.clientY; }
+      m.alt = e.altKey;m.shift = e.shiftKey;m.ctrl = e.ctrlKey;
+      if (t === "mousedown") { m.buttonRaw |= m.bm[e.which-1];
+      } else if (t === "mouseup") { m.buttonRaw &= m.bm[e.which + 2];
+      } else if (t === "mouseout") { m.buttonRaw = 0; m.over = false;
+      } else if (t === "mouseover") { m.over = true;
+      } else if (t === "mousewheel") { m.w = e.wheelDelta;
+      } else if (t === "DOMMouseScroll") { m.w = -e.detail;}
+      if (canvasMouseCallBack) { canvasMouseCallBack(m.x, m.y); }
+      e.preventDefault();
+    }
+    function startMouse(element){
+      if(element === undefined){
+        element = document;
+      }
+      mouse.element = element;
+      "mousemove,mousedown,mouseup,mouseout,mouseover,mousewheel,DOMMouseScroll".split(",").forEach(
+        function(n){element.addEventListener(n, mouseMove);});
+      element.addEventListener("contextmenu", function (e) {e.preventDefault();}, false);
+    }
+    mouse.mouseStart = startMouse;
+    return mouse;
+  })();
+  if(typeof canvas !== "undefined"){
+    mouse.mouseStart(canvas);
+  }else{
+    mouse.mouseStart();
+  }
+  /** MouseFull.js end **/
+  /** ImageTools.js begin **/
+  var imageTools = (function(){
+    var iT = {
+      canvas:function(w,h){var c=document.createElement("canvas");c.width=w;c.height=h;return c;},
+      createImage:function(w,h){var i=iT.canvas(w,h);i.ctx=i.getContext("2d");return i;},
+      loadImage:function(url,cb){var i=new Image();i.src=url;i.addEventListener('load',cb);return i;},
+      image2Canvas:function(ig){var i=iT.canvas(ig.width,ig.height);i.ctx=i.getContext("2d");i.drawImage(ig,0,0);return i;},
+      imageData:function(img){return (img.ctx||(iT.image2Canvas(img).ctx)).getImageData(0,0,img.width,img.height).data;},
+      saveAsPNG:function(image,filename){ // No IE <11 support. Chrome URL bug for large files may crash
+        var ac,e;
+        if(image.toDataURL === undefined){ image = it.image2Canvas(image);}
+        ac = document.createElement('a'); ac.href = image.toDataURL(); ac.download = filename+".png";
+        // need to update this as it has depreciated.
+        if (document.createEvent) {
+          (e = document.createEvent("MouseEvents")).initMouseEvent("click", true, true, window,0, 0, 0, 0, 0, false, false, false,false, 0, null);
+          ac.dispatchEvent(e);
+        }
+      }
+    };
+    return iT;
+  })();
+
+  /** ImageTools.js end **/
+
+  var w = canvas.width;
+  var h = canvas.height;
+  var ix = Math.ceil(Math.min(w, h) / 20);
+  const PI2 = Math.PI * 2;
+
+
+
+  // following three function are for drawing, updating, and on to set floating value
+
+  // draw circular control needs to be bound to a circular control object
+  function drawCirControl(){
+    var c, r, r1, r2, x, y, w, a;
+    c = this.ctx;
+    r = this.radius1;
+    r1 = this.radius2;
+
+    c.lineWidth = w = Math.abs(r - r1);
+    r2 = Math.min(r, r1) + w / 2;
+    c.strokeStyle = this.borderColour;
+    c.beginPath();
+    c.arc(this.x, this.y, r2, 0, Math.PI * 2)
+    c.stroke();
+    c.strokeStyle = this.colour;
+    c.lineWidth = w - this.border * 2;
+    c.beginPath();
+    c.arc(this.x, this.y, r2, 0, Math.PI * 2)
+    c.stroke();
+    // if more than one turn between min and max then also display progress as one turn
+    if(Math.abs(this.startAng - this.endAng) > PI2){
+      c.lineCap = "round";
+      c.strokeStyle = this.lineColour;
+      c.lineWidth = (w - this.border * 6)/2;
+      c.beginPath();
+      a = (this.floatingRaw - this.startAng) % PI2 + this.startAng;
+      c.arc(this.x, this.y, r2 + (w - this.border * 6)/4, this.startAng, a)
+      c.stroke();
+
+      a = this.startAng + ((this.floatingValue - this.min) / (this.max - this.min)) * PI2;
+      c.lineCap = "round";
+      c.strokeStyle = this.lineInnerColour;
+      c.lineWidth = (w - this.border * 6)/2;
+      c.beginPath();
+      c.arc(this.x, this.y, r2 - (w - this.border * 6)/4, this.startAng, a)
+      c.stroke();
+
+
+    }else{
+      c.lineCap = "round";
+      c.strokeStyle = this.lineColour;
+      c.lineWidth = w - this.border * 6;
+      c.beginPath();
+      c.arc(this.x, this.y, r2, this.startAng, this.floatingRaw)
+      c.stroke();
+    }
+
+
+    x = Math.cos(this.raw) * r2 + this.x;
+    y = Math.sin(this.raw) * r2 + this.y;
+
+    c.lineWidth = this.border;
+    c.strokeStyle = this.borderColour;
+    c.fillStyle = this.colour;
+    c.beginPath();
+    c.arc(x, y, (w * this.handleSize)/2, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+
+    c.font = this.font;
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(Math.round(this.value), this.x, this.y);
+  }
+
+  // Update by checking mouse position and setting cursor and controling the dragging
+  // circular control needs to be bound to a circular control object
+  function updateCircularControl(){
+    var r, r1, r2, x, y, dist, ang, a, w, h, mouseOver;
+    r = this.radius1;
+    r1 = this.radius2;
+    w = Math.abs(r - r1);
+    r2 = Math.min(r, r1) + w / 2;
+    if(!this.floating){
+      this.floatingValue = this.value;
+    }
+    this.raw = (this.value / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+    this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+    x = Math.cos(this.raw) * r2 + this.x;
+    y = Math.sin(this.raw) * r2 + this.y;
+    mouseOver = false;
+    dist = Math.sqrt(Math.pow(x - mouse.x, 2) + Math.pow(y - mouse.y, 2));
+    if(this.mouse.mousePrivate === 0 || this.mouse.mousePrivate === this.id){
+      if(dist < w * this.handleSize || this.dragging){
+        this.mouse.setCursor("pointer");
+        mouseOver = true;
+        this.mouse.mousePrivate = this.id;
+        if((this.mouse.buttonRaw & 1) === 1 && !this.dragging){
+          this.dragging = true;
+          this.lastAng = (this.raw + PI2) % PI2;
+
+        }else{
+          if((this.mouse.buttonRaw & 1) === 0){
+            this.dragging = false;
+          }else{
+            // get the angle to the mouse
+            ang = ((Math.atan2(mouse.y - this.y, mouse.x - this.x)) + PI2) % PI2;
+            // get the delta from last angle
+            a = (ang - this.lastAng);
+            // check that is has not cycled and adjust acordingly
+            if(a < -Math.PI * (3/2)){
+              a += PI2
+            }
+            if(a > Math.PI * (3/2)){
+              a -= PI2
+            }
+            // set last angle
+            this.lastAng = ang;
+            // set the raw vale
+            this.raw += a;
+            this.value =  ((this.raw - this.startAng) / (this.endAng - this.startAng)) * (this.max - this.min) + this.min
+            this.value = Math.min(this.max, Math.max(this.min, this.value));
+            dialValue.next(Math.floor(this.value));
+            if(!this.floating){
+              this.floatingValue = this.value;
+            }
+            // recalculate the raw value
+            this.raw = (this.value / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+            this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+          }
+        }
+      }
+    }
+    if(! mouseOver && this.mouse.mousePrivate === this.id ){
+      this.mouse.mousePrivate = 0;
+    }
+  }
+
+  // set circular control floating value needs to be bound to a circular control object
+  function setCirciularFloatingValue(v){
+    this.floatingValue = v;
+    this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+  }
+
+
+  // create a circular control
+  // x, y is the center pos;
+  // min max is the min max values
+  // r1 r2 are inner and outer radius
+  // ctx is the canvas context to draw to
+  // mouse is the mouse object. This is a custom mouse object provided
+  //       in the demo.
+
+  function createCircularControl(x,y,min,max,r1,r2,ctx,mouse){
+    var s, fontSize;
+    s = Math.min(r1,r2);
+    fontSize = Math.ceil(s/2);
+    var control = {
+      raw : 0,                    // the raw angle to draw the control handle ar
+      floatingRaw : 0,            // if the actuale value floats independent of control position
+      lastAng : 0,
+      x : x,                      // center of control
+      y : y,
+      min : min,                  // min and max values
+      max : max,
+      value : 21,                  // value of control
+      floatingValue : 0,
+      startAng : -Math.PI/2,      // start angle
+      endAng : Math.PI * (3/2),   // end angle
+      radius1 : r1,               // inner and outer angles
+      radius2 : r2,
+      border : 1,                 // border radius
+      colour : "white",           // inner colour
+      borderColour : "black",     // border colour
+      lineColour : "#5AF",
+      lineInnerColour : "#5AF",
+      font : fontSize + "px Arial Black",  // font for center display
+      handleSize : 1.5,           // handle size aas ratio to control width
+      floating : false,
+      draw : drawCirControl,      // function to draw control
+      ctx : ctx,                  // get the context to draw to
+      mouse : mouse,              // set the mouse
+      id : mouse.getInterfaceId(), // get an ID for this control
+      update : updateCircularControl,  // updates the control
+      setFloatingValue : setCirciularFloatingValue,
+    }
+    return control;
+  }
+
+
+  // create the controls
+  var cont1 = createCircularControl(w/2, h/2, 0, 45, w/2, 0, ctx, mouse);
+
+  // set up top left control extra attributes
+  // It has 10 rotations between min and max
+  cont1.startAng =  -Math.PI/2;
+  cont1.endAng =  -Math.PI/2 + PI2 * 6 + (PI2 / 7)*3;
+  cont1.handleSize = 1;
+  cont1.lineInnerColour = "#8C5";
+
+  // Updates all
+  function update(){
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0, 0, w, h);
+
+    cont1.update();
+    cont1.draw();
+
+    if(!STOP){
+      requestAnimationFrame(update);
+    }else{
+      var canv = document.getElementById("canv");
+      if(canv !== null){
+        document.body.removeChild(canv);
+      }
+      STOP = false;
+    }
+    mouse.frameEnd();
+
+  }
+
+  update();
+
+}
+
+var STOP = false;
+function resizeEvent(){
+  var waitForStopped = function(){
+    if(!STOP){  // wait for stop to return to false
+      createDial();
+      return;
+    }
+    setTimeout(waitForStopped,200);
+  }
+  STOP = true;
+  setTimeout(waitForStopped,100);
+}
 
 
 /**
@@ -28,9 +395,31 @@ export class RadialPage {
     "a": 3,
     "b": 3
   };
+  currentKey: number = 19; // key 19 is A3, so that C4 is central. There are 52 keys in total (0-51).
+
+  moveToKey(absKey: number) {
+    // check if within range
+    if (absKey < 0 || absKey > 51) {
+      return;
+    }
+
+    let octave = Math.floor(absKey / 7); // 19 / 7 = 2
+    let relKey = absKey - 7 * octave; // 19 - 7 * 2 = 6
+    // result = 3
+    this.octaveHeights = {
+      "c": octave + 1 + turnBinary(Math.floor(relKey / 3)),
+      "d": octave + 1 + turnBinary(Math.floor(relKey / 4)),
+      "e": octave + 1 + turnBinary(Math.floor(relKey / 5)),
+      "f": octave + 1 + turnBinary(Math.floor(relKey / 6)),
+      "g": octave + 1 + turnBinary(Math.floor(relKey / 7)),
+      "a": octave + turnBinary(Math.floor(relKey / 1)),
+      "b": octave + turnBinary(Math.floor(relKey / 2))
+    };
+  }
 
   moveOneUp() {
     if (this.octaveHeights["c"] === this.octaveHeights["b"]) {
+      this.currentKey++;
       this.octaveHeights["c"]++;
     } else {
       let lastHeight = -1;
@@ -41,6 +430,7 @@ export class RadialPage {
             return;
           }
           this.octaveHeights[key] = this.octaveHeights[key]+1;
+          this.currentKey++;
           return;
         } else {
           lastHeight = this.octaveHeights[key];
@@ -50,6 +440,7 @@ export class RadialPage {
   }
   moveOneDown() {
     if (this.octaveHeights["b"] === this.octaveHeights["c"]) {
+      this.currentKey--;
       this.octaveHeights["b"]--;
     } else {
       let lastHeight = -1;
@@ -61,6 +452,7 @@ export class RadialPage {
             return;
           }
           this.octaveHeights[lastKey] = this.octaveHeights[lastKey]-1;
+          this.currentKey--;
           return;
         } else {
           lastHeight = this.octaveHeights[key];
@@ -71,23 +463,25 @@ export class RadialPage {
   }
   moveAllUp() {
     // Check if valid
-    if(this.octaveHeights["c"] === 7) {
+    if(this.octaveHeights["d"] === 7) {
       return;
     }
 
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]+1;
     }
+    this.currentKey= this.currentKey + 7;
   }
   moveAllDown() {
     // Check if valid
-    if(this.octaveHeights["g"] === 2) {
+    if(this.octaveHeights["g"] === 1) {
       return;
     }
 
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]-1;
     }
+    this.currentKey= this.currentKey - 7;
   }
 
   currentDuration:number = 0;
@@ -98,11 +492,24 @@ export class RadialPage {
   timeId:number = 0;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider) {
+    dialValue = new BehaviorSubject<number>(21);
+    // console.log(dialValue); // DEBUG
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RadialPage');
+    // console.log('ionViewDidLoad RadialPage'); // DEBUG
     ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+
+    // Wait a bit for locations to finalise
+    setTimeout(() => {
+      window.addEventListener("resize",resizeEvent);
+      createDial();
+    }, 300);
+
+    dialValue.subscribe((value: number) => {
+      // console.log(value); // DEBUG
+      this.moveToKey(value);
+    })
   }
 
   undoNote() {
