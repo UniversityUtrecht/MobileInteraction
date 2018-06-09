@@ -83,11 +83,22 @@ function createDial(){
     function mouseMove(e) {
       var t = e.type, m = mouse;
       m.x = e.offsetX; m.y = e.offsetY;
+      let radialPiano = document.getElementById("radialPiano");
+
+      // Check if on top of radial piano rather than smaller dial circle
+      let underneath = document.elementFromPoint(e.clientX, e.clientY);
+      if (underneath && underneath.id !== "canv") {
+        m.over = false;
+        m.x = e.clientX; m.y = e.clientY; // use overall x/y rather than element-specific
+      } else {
+        m.over = true;
+      }
+
       if (m.x === undefined) { m.x = e.clientX; m.y = e.clientY; }
       m.alt = e.altKey;m.shift = e.shiftKey;m.ctrl = e.ctrlKey;
-      if (t === "mousedown") { m.buttonRaw |= m.bm[e.which-1];
-      } else if (t === "mouseup") { m.buttonRaw &= m.bm[e.which + 2];
-      } else if (t === "mouseout") { m.buttonRaw = 0; m.over = false;
+      if (t === "mousedown") { m.buttonRaw |= m.bm[e.which-1]; radialPiano.classList.add("deactivated");
+      } else if (t === "mouseup") { m.buttonRaw &= m.bm[e.which + 2]; radialPiano.classList.remove("deactivated");
+      } else if (t === "mouseout") { m.over = false; // m.buttonRaw = 0;
       } else if (t === "mouseover") { m.over = true;
       } else if (t === "mousewheel") { m.w = e.wheelDelta;
       } else if (t === "DOMMouseScroll") { m.w = -e.detail;}
@@ -100,7 +111,7 @@ function createDial(){
       }
       mouse.element = element;
       "mousemove,mousedown,mouseup,mouseout,mouseover,mousewheel,DOMMouseScroll".split(",").forEach(
-        function(n){element.addEventListener(n, mouseMove);});
+        function(n){document.addEventListener(n, mouseMove);});
       element.addEventListener("contextmenu", function (e) {e.preventDefault();}, false);
     }
     mouse.mouseStart = startMouse;
@@ -240,7 +251,22 @@ function createDial(){
             this.dragging = false;
           }else{
             // get the angle to the mouse
-            ang = ((Math.atan2(mouse.y - this.y, mouse.x - this.x)) + PI2) % PI2;
+            let currentAnchorElement;
+            let centerX; let centerY;
+            if (mouse.over) {
+              // if on top of small circle (based on container offset mouse placement)
+              currentAnchorElement = document.getElementById("rest_x5F_s").getBoundingClientRect();
+              centerX = currentAnchorElement['width'] / 2;
+              centerY = currentAnchorElement['height'] / 2;
+            } else {
+              // if on top of large circle or elsewhere (based on page mouse placement)
+              currentAnchorElement = document.getElementById("radialPiano").getBoundingClientRect();
+              centerX = currentAnchorElement.left + currentAnchorElement['width'] / 2;
+              centerY = currentAnchorElement.top + currentAnchorElement['height'] / 2;
+              }
+
+            ang = ((Math.atan2(mouse.y - centerY, mouse.x - centerX)) + PI2) % PI2;
+
             // get the delta from last angle
             a = (ang - this.lastAng);
             // check that is has not cycled and adjust acordingly
