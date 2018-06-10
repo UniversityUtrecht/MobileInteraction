@@ -49,7 +49,7 @@ page-radial {
     font-size: 90px;
   }
   #major g:active path {
-    fill: black;
+    fill: black !important;
   }
   #major g:active text {
     fill: white;
