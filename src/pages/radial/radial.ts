@@ -662,7 +662,14 @@ export class RadialPage {
 
   finish() {
     // Send results to log server
-    this.db.upload(PianoType.radial, this.musicCtrl.getCurrentPerformance());
+    // Check if actually played
+    let currentPerf = this.musicCtrl.getCurrentPerformance();
+    console.log(currentPerf);
+    if (currentPerf.finalSheetMusic.length <= 12) {
+      alert("You do not have anything to commit yet.");
+      return;
+    }
+    this.db.upload(PianoType.radial, currentPerf);
 
     // Purge sheet music
     this.musicCtrl.purge();

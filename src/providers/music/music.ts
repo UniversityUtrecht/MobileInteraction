@@ -186,13 +186,21 @@ export class MusicProvider {
   }
 
   getCurrentPerformance() {
-    console.log(Date.now());
-    console.log(this.overallStartTime);
-    console.log((Date.now() - this.overallStartTime) / 1000);
+    // console.log(Date.now()); // DEBUG
+    // console.log(this.overallStartTime); // DEBUG
+    // console.log((Date.now() - this.overallStartTime) / 1000); // DEBUG
+
+    let timeTaken;
+    if (this.overallStartTime !== 0) {
+      timeTaken = (Date.now() - this.overallStartTime) / 1000
+    } else {
+      timeTaken = -1;
+    }
+
     return {
       finalSheetMusic: this.generateSimpleABCNotation(),
       undoCount: this.undoCount,
-      timeTaken: (Date.now() - this.overallStartTime) / 1000
+      timeTaken: timeTaken
     }
   }
 }
