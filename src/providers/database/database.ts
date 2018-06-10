@@ -15,6 +15,7 @@ export enum PianoType {radial="radial", linear="linear"}
 @Injectable()
 export class DatabaseProvider {
   userID: BehaviorSubject<string>;
+  vibrationOn: boolean = true;
 
   setUserID(id: string) {
     this.userID.next(id);

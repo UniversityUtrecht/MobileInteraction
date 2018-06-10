@@ -635,7 +635,9 @@ export class RadialPage {
       event.stopPropagation(); // avoid double-playing for touch/mouse events
       event.preventDefault();
       this.musicCtrl.startNotePlay(note);
-      this.vibration.vibrate(1000);
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(1000);
+      }
   }
 
   stopNotePlay(event: Event) {
@@ -645,7 +647,9 @@ export class RadialPage {
       this.musicCtrl.stopNotePlay();
       this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
       this.scroll(1000,0);
-      this.vibration.vibrate(0);
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(0);
+      }
   }
 
   easeInOutCubic (t: number) {

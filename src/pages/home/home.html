@@ -9,6 +9,8 @@
 <ion-content padding>
   <button ion-button [navPush]="linearPage">Linear</button>
   <button ion-button color="secondary" [navPush]="radialPage">Radial</button>
+  <hr>
+  <button ion-button (click)="toggleVibration()">Rumble: {{ db.vibrationOn }}</button>
 </ion-content>
 
 <ion-footer>
