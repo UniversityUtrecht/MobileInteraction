@@ -72,15 +72,15 @@ export class LinearPage {
 
   startNotePlay(event: Event, note: string) {
     console.log(note + " started");
-    event.stopPropagation(); // avoid double-playing for touch/mouse events
-    event.preventDefault();
+    //event.stopPropagation(); // avoid double-playing for touch/mouse events
+    //event.preventDefault();
     this.musicCtrl.startNotePlay(note);
   }
 
   stopNotePlay(event: Event) {
     console.log("stopped note");
-    event.stopPropagation(); // avoid double-playing for touch/mouse events
-    event.preventDefault();
+    //event.stopPropagation(); // avoid double-playing for touch/mouse events
+    //event.preventDefault();
     this.musicCtrl.stopNotePlay();
     ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
   }
