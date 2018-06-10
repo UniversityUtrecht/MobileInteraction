@@ -22,6 +22,34 @@ function turnBinary(value: number) {
 
 /**
  * This function was taken from:
+ * https://stackoverflow.com/a/16179977
+ */
+function dec2hex(dec) {
+  return Number(parseInt( dec , 10)).toString(16);
+}
+
+function keyNumberToString(key: number) {
+  let keyString: string;
+  if (key === 1) {
+    keyString = "A";
+  } else if (key === 2) {
+    keyString = "B";
+  } else if (key === 3) {
+    keyString = "C";
+  } else if (key === 4) {
+    keyString = "D";
+  } else if (key === 5) {
+    keyString = "E";
+  } else if (key === 6) {
+    keyString = "F";
+  } else {
+    keyString = "G";
+  }
+  return keyString;
+}
+
+/**
+ * This function was adapted from:
  * https://stackoverflow.com/a/34663032
  */
 function createDial(){
@@ -446,6 +474,30 @@ export class RadialPage {
       "a": octave + turnBinary(Math.floor(relKey / 1)),
       "b": octave + turnBinary(Math.floor(relKey / 2))
     };
+
+    this.colorKeys(relKey);
+  }
+
+  /**
+   * Input is highest key currently available, as e.g. 1 as "a".
+   */
+  colorKeys(highestKey: number) {
+    let currentKey = highestKey;
+    for (let i = 0; i < 8; i++) {
+
+      let color_part_dec = 255 - i * 10;
+      let color_part_hex = dec2hex(color_part_dec);
+      let color = "#" + color_part_hex + color_part_hex + color_part_hex;
+
+      document.getElementById(keyNumberToString(currentKey)).getElementsByTagName("path")[0].style.fill = color;
+      // console.log(currentKey, keyNumberToString(currentKey), color); // DEBUG
+
+      if(currentKey === 0) {
+        currentKey = 7;
+      } else {
+        currentKey = --currentKey;
+      }
+    }
   }
 
   moveOneUp() {
