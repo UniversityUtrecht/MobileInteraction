@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import ABCJS from "abcjs";
+import ABCJS from "abcjs/midi";
 import { MusicProvider } from "../../providers/music/music";
 
 let scoreOptions = {
@@ -29,7 +29,13 @@ export class PlayPage {
   renderMusic() {
     this.abcMusic = this.abcMusic.replace('8[', '8 \n[');
     console.log(this.abcMusic);
-    ABCJS.renderAbc("drawScore", this.abcMusic, scoreOptions);
+    // ABCJS.renderAbc("drawScore", this.abcMusic, scoreOptions);
+    ABCJS.renderMidi(
+      "drawScore",
+      this.abcMusic,
+      { });
+
+    ABCJS.midi.startPlaying(document.querySelector(".abcjs-inline-midi"));
   }
 
 }
