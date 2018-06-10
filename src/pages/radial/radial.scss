@@ -1,13 +1,21 @@
 page-radial {
   // OVERALL
+  .scroll-content {
+    overflow: hidden;
+  }
   #radialPiano {
     position: absolute;
     bottom: 20px;
     margin: 20px;
+    max-height: 50%;
+    pointer-events: all;
   }
   #major, #minor, #rest {
     stroke-width: 2;
     stroke-miterlimit: 10;
+  }
+  .deactivated {
+    pointer-events: none !important;
   }
 
   // MAJOR CIRCLE
@@ -26,6 +34,10 @@ page-radial {
   }
   #major g:active text {
     fill: white;
+  }
+
+  .octaveNumber {
+    font-size: 50px !important;
   }
 
   // MINOR CIRCLE

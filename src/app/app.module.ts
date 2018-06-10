@@ -11,6 +11,18 @@ import { RadialPage } from "../pages/radial/radial";
 import { LinearPageModule } from "../pages/linear/linear.module";
 import { RadialPageModule } from "../pages/radial/radial.module";
 import { MusicProvider } from '../providers/music/music';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { DatabaseProvider } from '../providers/database/database';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCHTvtcAKXhyyFufCPUFxj1GoAJlm-5Rsg",
+  authDomain: "hazelnote-10ab2.firebaseapp.com",
+  databaseURL: "https://hazelnote-10ab2.firebaseio.com",
+  projectId: "hazelnote-10ab2",
+  storageBucket: "hazelnote-10ab2.appspot.com",
+  messagingSenderId: "802874862515"
+};
 
 @NgModule({
   declarations: [
@@ -21,7 +33,9 @@ import { MusicProvider } from '../providers/music/music';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     LinearPageModule,
-    RadialPageModule
+    RadialPageModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -34,7 +48,8 @@ import { MusicProvider } from '../providers/music/music';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    MusicProvider
+    MusicProvider,
+    DatabaseProvider,
   ]
 })
 export class AppModule {}
