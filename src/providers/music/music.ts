@@ -1,9 +1,6 @@
 //import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import MIDIPlayer from 'midi.js';
-import MIDIWriter from 'jsmidgen';
-
 @Injectable()
 export class MusicProvider {
 
@@ -25,21 +22,12 @@ export class MusicProvider {
   overallStartTime:number=0;
 
   constructor() {
-  MIDIPlayer.loadPlugin({
-      soundfontUrl: "/assets/soundfont/",
-      onprogress: function(state, progress) {
-        console.log(state, progress);
-      },
-      onsuccess: function() {
-        MIDIPlayer.setVolume(0, 255);
-		MIDIPlayer.BPM = 80;
-      }
-    });
+
   }
 
   // Test function, ignore it.
   test() {
-	console.log(MIDIPlayer.keyToNote);
+
   }
 
   // Transform note string formatting to correct format.
@@ -57,7 +45,7 @@ export class MusicProvider {
 
     this.timeStart = new Date().getTime();
     this.note = this.getCorrectNoteFormat(note);
-    MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.note], this.velocity, this.delay);
+
 
   }
 
@@ -98,9 +86,7 @@ export class MusicProvider {
 
   // Stop playing note, measure time the note should be playing and add it to the internal notes list.
   stopNotePlay() {
-    MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[this.note], this.delay);
-    this.timeEnd = new Date().getTime();
-    this.addNote(this.note, this.getNoteTime(this.getNotePercentage(this.timeStart, this.timeEnd)));
+
   }
 
   // Add note and its duration to the internal note list.
@@ -126,15 +112,13 @@ export class MusicProvider {
 
   // Play a single note. This not is not added to the whole music sheet.
   playSingleNote(note: string, duration: number = 1) {
-    MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.getCorrectNoteFormat(note)], this.velocity, 0);
-    MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[this.getCorrectNoteFormat(note)], this.velocity, duration);
+
   }
 
   // Generate MIDI format file from internal data structure.
   generateMIDITrack()
   {
-    let file:MIDIWriter.File = new MIDIWriter.File();
-    let track:MIDIWriter.Track = new MIDIWriter.Track();
+
     file.addTrack(track);
     for (let i in this.noteList) {
       track.addNote(0, this.noteList[i], this.noteDurations[i]);
@@ -144,10 +128,7 @@ export class MusicProvider {
 
   // Play whole music sheet.
   playWholeSheet() {
-    MIDIPlayer.Player.currentData = this.generateMIDITrack().toBytes();
-    MIDIPlayer.Player.loadMidiFile();
-    MIDIPlayer.Player.stop();
-    MIDIPlayer.Player.start();
+
   }
 
   // Generate simple ABC notation without enforcing musical rules.

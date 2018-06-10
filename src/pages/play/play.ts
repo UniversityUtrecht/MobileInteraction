@@ -21,21 +21,39 @@ export class PlayPage {
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private musicCtrl: MusicProvider) {
+    ABCJS.midi.setSoundFont("/assets/soundfont/");
   }
 
   ionViewDidLoad() {
   }
 
   renderMusic() {
+    let bpm = 120;
     this.abcMusic = this.abcMusic.replace('8[', '8 \n[');
     console.log(this.abcMusic);
-    // ABCJS.renderAbc("drawScore", this.abcMusic, scoreOptions);
+
+    let tunes = ABCJS.renderAbc("drawScore", this.abcMusic, scoreOptions);
+
     ABCJS.renderMidi(
-      "drawScore",
+      "scoreAudio",
       this.abcMusic,
-      { });
+      {
+        qpm: bpm,
+        program: 0,
+        // animate: { listener: function(abcjsElement, currentEvent, context) {}, target: tunes[0], qpm: bpm },
+        inlineControls: {
+          hide: true,
+        },
+      }
+    );
 
     ABCJS.midi.startPlaying(document.querySelector(".abcjs-inline-midi"));
+
+    ABCJS.startAnimation(document.getElementById("drawScore"), tunes[0], {
+      showCursor: true,
+      bpm: bpm,
+    });
+
   }
 
 }
