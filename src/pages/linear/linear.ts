@@ -87,7 +87,14 @@ export class LinearPage {
 
   finish() {
     // Send results to log server
-    this.db.upload(PianoType.linear, this.musicCtrl.getCurrentPerformance());
+    // Check if actually played
+    let currentPerf = this.musicCtrl.getCurrentPerformance();
+    console.log(currentPerf);
+    if (currentPerf.finalSheetMusic.length <= 12) {
+      alert("You do not have anything to commit yet.");
+      return;
+    }
+    this.db.upload(PianoType.linear, currentPerf);
 
     // Purge sheet music
     this.musicCtrl.purge();
