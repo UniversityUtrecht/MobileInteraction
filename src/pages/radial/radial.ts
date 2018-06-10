@@ -669,8 +669,8 @@ export class RadialPage {
   scroll(x: number,y:number) {
 
     // create an animation
-    const fps = 120; // Frames per second.. consider using good value depending on your device
-    const duration = 300; //animation duration in ms
+    const fps = 30; // Frames per second.. consider using good value depending on your device
+    const duration = 50; //animation duration in ms
 
     const frameLength = Math.floor(duration/fps);
     const frames = Math.floor(duration/frameLength);
