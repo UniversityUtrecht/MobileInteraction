@@ -5,6 +5,7 @@ import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
 import ABCJS from "abcjs";
 import { BehaviorSubject } from "rxjs/Rx";
+import { Vibration } from "@ionic-native/vibration";
 
 let dialValue: BehaviorSubject<number>;
 let dialManualChange: boolean = false;
@@ -557,7 +558,8 @@ export class RadialPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider,
+              private db: DatabaseProvider, public loadingCtrl: LoadingController, private vibration: Vibration) {
     dialValue = new BehaviorSubject<number>(21);
     // console.log(dialValue); // DEBUG
   }
@@ -633,6 +635,7 @@ export class RadialPage {
       event.stopPropagation(); // avoid double-playing for touch/mouse events
       event.preventDefault();
       this.musicCtrl.startNotePlay(note);
+      this.vibration.vibrate(1000);
   }
 
   stopNotePlay(event: Event) {
@@ -642,6 +645,7 @@ export class RadialPage {
       this.musicCtrl.stopNotePlay();
       this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
       this.scroll(1000,0);
+      this.vibration.vibrate(0);
   }
 
   easeInOutCubic (t: number) {
