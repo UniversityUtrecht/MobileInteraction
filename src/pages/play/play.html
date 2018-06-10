@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Play Music</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-scroll #scoreScroller id="scoreScroller" scrollX="true" style = "width: 100%; height: 150px;">
+    <div id="drawScore"></div>
+  </ion-scroll>
+
+  <p>Place ABC code here to generate sheet music and an audio file.</p>
+  <textarea [(ngModel)]="abcMusic"></textarea>
+  <button (click)="renderMusic()">Play music</button>
+
+</ion-content>

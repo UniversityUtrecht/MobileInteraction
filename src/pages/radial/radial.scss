@@ -18,6 +18,25 @@ page-radial {
     pointer-events: none !important;
   }
 
+  // BUTTONS
+  .contIcons {
+    cursor: pointer;
+  }
+  #playAll {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  // MUSIC SHEETS
+  #scoreScroller {
+  }
+  #drawScore {
+  }
+  #drawScore .cursor {
+    background-color: #ffffc0;
+    opacity: 0.5;
+  }
+
   // MAJOR CIRCLE
   #major g path {
     stroke: black;
@@ -30,7 +49,7 @@ page-radial {
     font-size: 90px;
   }
   #major g:active path {
-    fill: black;
+    fill: black !important;
   }
   #major g:active text {
     fill: white;

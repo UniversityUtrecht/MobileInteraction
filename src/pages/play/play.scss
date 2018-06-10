@@ -1,0 +1,10 @@
+page-play {
+  .scroll-content {
+    overflow: hidden;
+  }
+  textarea {
+    width: 100%;
+    resize: vertical;
+    height: 400px;
+  }
+}
