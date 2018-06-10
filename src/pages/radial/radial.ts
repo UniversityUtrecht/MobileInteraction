@@ -547,7 +547,7 @@ export class RadialPage {
 
     // Propagate to dial element
     dialManualChange = true;
-    dialValue.next(dialValue.getValue() + 7);
+    dialValue.next(dialValue.getValue() - 7);
   }
 
   currentDuration:number = 0;
