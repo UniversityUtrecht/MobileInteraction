@@ -400,15 +400,7 @@ function createDial(){
 
 var STOP = false;
 function resizeEvent(){
-  var waitForStopped = function(){
-    if(!STOP){  // wait for stop to return to false
-      createDial();
-      return;
-    }
-    setTimeout(waitForStopped,200);
-  }
-  STOP = true;
-  setTimeout(waitForStopped,100);
+  createDial();
 }
 
 
