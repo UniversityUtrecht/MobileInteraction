@@ -5,6 +5,7 @@ import { RadialPage } from "../radial/radial";
 
 import { MusicProvider } from "../../providers/music/music"
 import { DatabaseProvider } from "../../providers/database/database";
+import { PlayPage } from "../play/play";
 
 @Component({
   selector: 'page-home',
@@ -13,6 +14,7 @@ import { DatabaseProvider } from "../../providers/database/database";
 export class HomePage {
   linearPage = LinearPage;
   radialPage = RadialPage;
+  playPage = PlayPage;
 
   constructor(public navCtrl: NavController, public musicCtrl: MusicProvider, public db: DatabaseProvider) {
   }

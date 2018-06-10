@@ -9,13 +9,13 @@
 <ion-content padding>
   <button ion-button [navPush]="linearPage">Linear</button>
   <button ion-button color="secondary" [navPush]="radialPage">Radial</button>
-
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <p id="userName">{{ this.db.userID | async }}</p>
     <ion-buttons end>
+      <button ion-button [navPush]="playPage">Play</button>
       <button ion-button (click)="fullReset()">Reset</button>
     </ion-buttons>
   </ion-toolbar>
