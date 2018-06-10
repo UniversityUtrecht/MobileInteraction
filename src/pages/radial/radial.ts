@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
@@ -522,7 +522,7 @@ export class RadialPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider, public loadingCtrl: LoadingController) {
     dialValue = new BehaviorSubject<number>(21);
     // console.log(dialValue); // DEBUG
   }
@@ -531,11 +531,18 @@ export class RadialPage {
     // console.log('ionViewDidLoad RadialPage'); // DEBUG
     ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
 
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+
+    loading.present();
+
     // Wait a bit for locations to finalise
     setTimeout(() => {
       window.addEventListener("resize",resizeEvent);
       createDial();
-    }, 300);
+      loading.dismiss();
+    }, 1000);
 
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
