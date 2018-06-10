@@ -7,6 +7,7 @@ import ABCJS from "abcjs";
 import { BehaviorSubject } from "rxjs/Rx";
 
 let dialValue: BehaviorSubject<number>;
+let mouseMoveGlobal;
 
 /**
  * If value > 0, return 1. Else return 0.
@@ -79,38 +80,66 @@ function createDial(){
       frameEnd : update,
       startMouse:undefined,
       element : undefined,
+      dragging: false,
+      type: "mouse"
     };
     function mouseMove(e) {
       var t = e.type, m = mouse;
-      m.x = e.offsetX; m.y = e.offsetY;
       let radialPiano = document.getElementById("radialPiano");
+      let canv = document.getElementById("canv");
 
-      // Check if on top of radial piano rather than smaller dial circle
-      let underneath = document.elementFromPoint(e.clientX, e.clientY);
-      if (underneath && underneath.id !== "canv") {
-        m.over = false;
-        m.x = e.clientX; m.y = e.clientY; // use overall x/y rather than element-specific
+      // console.log(e); // DEBUG
+
+      let rawX, rawY;
+      if (e.clientX) {
+        m.type = "mouse";
+        rawX = e.clientX; rawY = e.clientY
       } else {
-        m.over = true;
+        m.type = "touch";
+        if (e.touches.length > 0) {
+          rawX = e.touches[0].clientX;
+          rawY = e.touches[0].clientY;
+        }
+      }
+
+      let onTarget;
+      if (rawX && rawY) {
+        let rect = canv.getBoundingClientRect();
+        let underneath = document.elementFromPoint(rawX, rawY);
+        let targetID;
+        if (underneath) {
+          targetID = underneath.id;
+        }
+        onTarget = targetID === "canv";
+        if (!onTarget) {
+          m.over = false;
+          m.x = rawX; m.y = rawY; // use overall x/y
+        } else {
+          m.over = true;
+          m.x = rawX - rect.left; // use element-specific x/y
+          m.y = rawY - rect.top;
+        }
       }
 
       if (m.x === undefined) { m.x = e.clientX; m.y = e.clientY; }
       m.alt = e.altKey;m.shift = e.shiftKey;m.ctrl = e.ctrlKey;
-      if (t === "mousedown") { m.buttonRaw |= m.bm[e.which-1]; radialPiano.classList.add("deactivated");
-      } else if (t === "mouseup") { m.buttonRaw &= m.bm[e.which + 2]; radialPiano.classList.remove("deactivated");
+      if ((t === "mousedown" || t === "touchstart") && onTarget) { m.buttonRaw |= m.bm[e.which-1]; radialPiano.classList.add("deactivated"); m.dragging = true;
+      } else if (t === "mouseup" || t === "touchend" && m.dragging === true) { m.buttonRaw &= m.bm[e.which + 2]; radialPiano.classList.remove("deactivated"); m.dragging = false;
       } else if (t === "mouseout") { m.over = false; // m.buttonRaw = 0;
       } else if (t === "mouseover") { m.over = true;
-      } else if (t === "mousewheel") { m.w = e.wheelDelta;
-      } else if (t === "DOMMouseScroll") { m.w = -e.detail;}
+      } // else if (t === "mousewheel") { m.w = e.wheelDelta;
+      // } else if (t === "DOMMouseScroll") { m.w = -e.detail;}
       if (canvasMouseCallBack) { canvasMouseCallBack(m.x, m.y); }
       e.preventDefault();
     }
+    mouseMoveGlobal = mouseMove;
     function startMouse(element){
       if(element === undefined){
         element = document;
       }
       mouse.element = element;
-      "mousemove,mousedown,mouseup,mouseout,mouseover,mousewheel,DOMMouseScroll".split(",").forEach(
+
+      "mousemove,mousedown,mouseup,mouseout,mouseover,touchmove,touchstart,touchend".split(",").forEach( // mousewheel,DOMMouseScroll
         function(n){document.addEventListener(n, mouseMove);});
       element.addEventListener("contextmenu", function (e) {e.preventDefault();}, false);
     }
@@ -128,7 +157,6 @@ function createDial(){
   var h = canvas.height;
   // var ix = Math.ceil(Math.min(w, h) / 20);
   const PI2 = Math.PI * 2;
-
 
 
   // following three function are for drawing, updating, and on to set floating value
@@ -214,19 +242,28 @@ function createDial(){
     y = Math.sin(this.raw) * r2 + this.y;
     mouseOver = false;
     dist = Math.sqrt(Math.pow(x - mouse.x, 2) + Math.pow(y - mouse.y, 2));
+
+
+    let isClicking;
+    if (mouse.type === "mouse") {
+      isClicking = (this.mouse.buttonRaw & 1) === 1;
+    } else {
+      isClicking = mouse.dragging;
+    }
+
+    // console.log(mouse.dragging); // DEBUG
     if(this.mouse.mousePrivate === 0 || this.mouse.mousePrivate === this.id){
-      if(dist < w * this.handleSize || this.dragging){
+      if(dist < w * this.handleSize || mouse.dragging){
         this.mouse.setCursor("pointer");
         mouseOver = true;
         this.mouse.mousePrivate = this.id;
-        if((this.mouse.buttonRaw & 1) === 1 && !this.dragging){
-          this.dragging = true;
+        if((isClicking || true) && !mouse.dragging){
+          mouse.dragging = true;
           this.lastAng = (this.raw + PI2) % PI2;
-
         }else{
-          if((this.mouse.buttonRaw & 1) === 0){
-            this.dragging = false;
-          }else{
+          if (!isClicking) {
+            mouse.dragging = false;
+          } else{
             // get the angle to the mouse
             let currentAnchorElement;
             let centerX; let centerY;
@@ -243,7 +280,6 @@ function createDial(){
               }
 
             ang = ((Math.atan2(mouse.y - centerY, mouse.x - centerX)) + PI2) % PI2;
-
             // get the delta from last angle
             a = (ang - this.lastAng);
             // check that is has not cycled and adjust acordingly
@@ -515,6 +551,13 @@ export class RadialPage {
     })
   }
 
+  ionViewWillLeave() {
+    "mousemove,mousedown,mouseup,mouseout,mouseover,touchmove,touchstart,touchend".split(",").forEach( // mousewheel,DOMMouseScroll
+      function(n){document.removeEventListener(n, mouseMoveGlobal);});
+    let canvas = document.getElementById("canv");
+    document.body.removeChild(canvas);
+  }
+
   undoNote() {
     this.musicCtrl.undoLastNote();
     ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
@@ -577,4 +620,10 @@ export class RadialPage {
     this.navCtrl.pop();
   }
 
+  back() {
+    // Purge sheet music
+    this.musicCtrl.purge();
+    // Return to main menu
+    this.navCtrl.pop();
+  }
 }

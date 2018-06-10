@@ -1,5 +1,8 @@
 page-radial {
   // OVERALL
+  .scroll-content {
+    overflow: hidden;
+  }
   #radialPiano {
     position: absolute;
     bottom: 20px;

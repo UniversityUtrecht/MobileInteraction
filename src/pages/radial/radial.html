@@ -1,9 +1,12 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar hideBackButton>
     <ion-title>Radial</ion-title>
+    <ion-buttons start>
+      <button ion-button (touchstart)="back()" (mousedown)="back()">back</button>
+    </ion-buttons>
     <ion-buttons end>
-      <button ion-button (click)="finish()">Done</button>
+      <button ion-button (touchstart)="finish()" (mousedown)="finish()">Done</button>
     </ion-buttons>
   </ion-navbar>
 
@@ -11,12 +14,11 @@
 
 
 <ion-content padding>
-
   <ion-scroll scrollX="true" style = "width: 100%; height: 150px;;">
     <div id="drawScore"></div>
   </ion-scroll>
   <div id="undo" align="right" style="width: 90%; height: 100%;">
-    <svg class="undo-button" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" (click)="undoNote()">
+    <svg class="undo-button" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" (touchstart)="undoNote()" (mousedown)="undoNote()">
       <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54
      0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg></div>
 
@@ -70,7 +72,7 @@
       <text transform="matrix(1 0 0 1 113.8117 214.765)">/G</text>
       <text transform="matrix(0.583 0 0 0.583 149.8117 202.7772)">♭</text>
     </g>
-    <g id="_x3C_-" (click)="moveAllDown()">
+    <g id="_x3C_-" (touchstart)="moveAllDown()" (mousedown)="moveAllDown()">
       <path d="M173.2,607.2l-83.4,66.6l0,0C33.6,602.9,0,513.2,0,415.7c0-32.5,3.7-64.1,10.8-94.4l104.1,23.7
         c-5.3,22.7-8.1,46.4-8.1,70.7c0,23.6,2.7,46.7,7.7,68.8C124.8,530,145.2,571.8,173.2,607.2z"/>
       <text transform="matrix(1 0 0 1 44.3501 506.089)">&lt;-</text>
@@ -91,7 +93,7 @@
       <text transform="matrix(1 0 0 1 571.2441 750.1427)">/D</text>
       <text transform="matrix(0.583 0 0 0.583 607.2441 738.1549)">♭</text>
     </g>
-    <g id="_x2D__x3E_" (click)="moveAllUp()">
+    <g id="_x2D__x3E_" (touchstart)="moveAllUp()" (mousedown)="moveAllUp()">
       <path d="M821.1,323.2c6.8,29.8,10.4,60.8,10.4,92.6c0,97.4-33.5,187-89.7,257.9l-83.5-66.5
         c28-35.4,48.3-77.1,58.7-122.6c5-22.1,7.7-45.1,7.7-68.8c0-23.7-2.7-46.7-7.7-68.8L821.1,323.2z"/>
       <text transform="matrix(1 0 0 1 748.2905 506.0892)">-&gt;</text>
