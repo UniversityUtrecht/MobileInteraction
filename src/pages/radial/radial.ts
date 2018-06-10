@@ -7,6 +7,7 @@ import ABCJS from "abcjs";
 import { BehaviorSubject } from "rxjs/Rx";
 
 let dialValue: BehaviorSubject<number>;
+let dialManualChange: boolean = false;
 let mouseMoveGlobal;
 
 let scoreOptions = {
@@ -266,6 +267,13 @@ function createDial(){
   // Update by checking mouse position and setting cursor and controling the dragging
   // circular control needs to be bound to a circular control object
   function updateCircularControl(){
+    if (dialManualChange) {
+      dialManualChange = false;
+      this.value = dialValue.getValue();
+      this.floatingValue = dialValue.getValue();
+      this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+    }
+
     var r, r1, r2, x, y, dist, ang, a, w, mouseOver;
     r = this.radius1;
     r1 = this.radius2;
@@ -315,7 +323,7 @@ function createDial(){
               currentAnchorElement = document.getElementById("radialPiano").getBoundingClientRect();
               centerX = currentAnchorElement.left + currentAnchorElement['width'] / 2;
               centerY = currentAnchorElement.top + currentAnchorElement['height'] / 2;
-              }
+            }
 
             ang = ((Math.atan2(mouse.y - centerY, mouse.x - centerX)) + PI2) % PI2;
             // get the delta from last angle
@@ -333,7 +341,7 @@ function createDial(){
             this.raw += a;
             this.value =  ((this.raw - this.startAng) / (this.endAng - this.startAng)) * (this.max - this.min) + this.min
             this.value = Math.min(this.max, Math.max(this.min, this.value));
-            dialValue.next(Math.floor(this.value));
+            dialValue.next(this.value);
             if(!this.floating){
               this.floatingValue = this.value;
             }
@@ -350,7 +358,7 @@ function createDial(){
   }
 
   // set circular control floating value needs to be bound to a circular control object
-  function setCirciularFloatingValue(v){
+  function setCircularFloatingValue(v){
     this.floatingValue = v;
     this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
   }
@@ -395,7 +403,7 @@ function createDial(){
       mouse : mouse,              // set the mouse
       id : mouse.getInterfaceId(), // get an ID for this control
       update : updateCircularControl,  // updates the control
-      setFloatingValue : setCirciularFloatingValue,
+      setFloatingValue : setCircularFloatingValue,
     }
     return control;
   }
@@ -464,7 +472,6 @@ export class RadialPage {
     "a": 3,
     "b": 3
   };
-  currentKey: number = 19; // key 19 is A3, so that C4 is central. There are 52 keys in total (0-51).
 
   tunes: any;
 
@@ -514,50 +521,6 @@ export class RadialPage {
     }
   }
 
-  moveOneUp() {
-    if (this.octaveHeights["c"] === this.octaveHeights["b"]) {
-      this.currentKey++;
-      this.octaveHeights["c"]++;
-    } else {
-      let lastHeight = -1;
-      for (let key in this.octaveHeights) {
-        if (lastHeight > this.octaveHeights[key]) {
-          // stop if key does not exist (c8 is highest possible)
-          if(this.octaveHeights[key] === 7 && key === "d") {
-            return;
-          }
-          this.octaveHeights[key] = this.octaveHeights[key]+1;
-          this.currentKey++;
-          return;
-        } else {
-          lastHeight = this.octaveHeights[key];
-        }
-      }
-    }
-  }
-  moveOneDown() {
-    if (this.octaveHeights["b"] === this.octaveHeights["c"]) {
-      this.currentKey--;
-      this.octaveHeights["b"]--;
-    } else {
-      let lastHeight = -1;
-      let lastKey = "";
-      for (let key in this.octaveHeights) {
-        if (lastHeight > this.octaveHeights[key]) {
-          // stop if key does not exist (b0 is lowest possible)
-          if(this.octaveHeights[key] === 0 && key === "a") {
-            return;
-          }
-          this.octaveHeights[lastKey] = this.octaveHeights[lastKey]-1;
-          this.currentKey--;
-          return;
-        } else {
-          lastHeight = this.octaveHeights[key];
-          lastKey = key;
-        }
-      }
-    }
-  }
   moveAllUp() {
     // Check if valid
     if(this.octaveHeights["d"] === 7) {
@@ -567,7 +530,10 @@ export class RadialPage {
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]+1;
     }
-    this.currentKey= this.currentKey + 7;
+
+    // Propagate to dial element
+    dialManualChange = true;
+    dialValue.next(dialValue.getValue() + 7);
   }
   moveAllDown() {
     // Check if valid
@@ -578,7 +544,10 @@ export class RadialPage {
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]-1;
     }
-    this.currentKey= this.currentKey - 7;
+
+    // Propagate to dial element
+    dialManualChange = true;
+    dialValue.next(dialValue.getValue() + 7);
   }
 
   currentDuration:number = 0;
@@ -612,7 +581,7 @@ export class RadialPage {
 
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
-      this.moveToKey(value);
+      this.moveToKey(Math.floor(value));
     })
   }
 
