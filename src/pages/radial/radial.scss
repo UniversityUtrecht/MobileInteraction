@@ -27,6 +27,16 @@ page-radial {
     padding-right: 17px;
   }
 
+  // MUSIC SHEETS
+  #scoreScroller {
+  }
+  #drawScore {
+  }
+  #drawScore .cursor {
+    background-color: #ffffc0;
+    opacity: 0.5;
+  }
+
   // MAJOR CIRCLE
   #major g path {
     stroke: black;

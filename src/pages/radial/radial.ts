@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
@@ -8,6 +8,13 @@ import { BehaviorSubject } from "rxjs/Rx";
 
 let dialValue: BehaviorSubject<number>;
 let mouseMoveGlobal;
+
+let scoreOptions = {
+  scale : 0.9,
+  viewportHorizontal : true,
+  staffwidth: 300,
+  add_classes: true
+};
 
 /**
  * If value > 0, return 1. Else return 0.
@@ -122,12 +129,15 @@ function createDial(){
       if (e.clientX) {
         m.type = "mouse";
         rawX = e.clientX; rawY = e.clientY
-      } else {
+      } else if (e.touches) {
         m.type = "touch";
         if (e.touches.length > 0) {
           rawX = e.touches[0].clientX;
           rawY = e.touches[0].clientY;
         }
+      } else {
+        console.log("unknown event", e);
+        return; //unknown
       }
 
       let onTarget;
@@ -456,6 +466,10 @@ export class RadialPage {
   };
   currentKey: number = 19; // key 19 is A3, so that C4 is central. There are 52 keys in total (0-51).
 
+  tunes: any;
+
+  @ViewChild('scoreScroller') scoreScroller: any;
+
   moveToKey(absKey: number) {
     // check if within range
     if (absKey < 0 || absKey > 51) {
@@ -581,7 +595,7 @@ export class RadialPage {
 
   ionViewDidLoad() {
     // console.log('ionViewDidLoad RadialPage'); // DEBUG
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+    this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
 
     let loading = this.loadingCtrl.create({
       content: 'Please wait...'
@@ -611,7 +625,7 @@ export class RadialPage {
 
   undoNote() {
     this.musicCtrl.undoLastNote();
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+    this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
   }
 
   updateDurationProgressBar(){
@@ -657,7 +671,55 @@ export class RadialPage {
       event.stopPropagation(); // avoid double-playing for touch/mouse events
       event.preventDefault();
       this.musicCtrl.stopNotePlay();
-      ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+      this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+      this.scroll(1000,0);
+  }
+
+  easeInOutCubic (t: number) {
+    /*
+     * Easing Functions - inspired from http://gizma.com/easing/
+     * only considering the t value for the range [0, 1] => [0, 1]
+     * https://gist.github.com/gre/1650294
+     */
+    return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1
+  }
+
+  /**
+   * Taken from https://gist.github.com/sgotre/e070ef5cce1c778a6380d4c139047e13
+   * @param {number} x
+   * @param {number} y
+   */
+  scroll(x: number,y:number) {
+
+    // create an animation
+    const fps = 120; // Frames per second.. consider using good value depending on your device
+    const duration = 300; //animation duration in ms
+
+    const frameLength = Math.floor(duration/fps);
+    const frames = Math.floor(duration/frameLength);
+
+    const fromX = this.scoreScroller._scrollContent.nativeElement.scrollLeft;
+    const fromY = this.scoreScroller._scrollContent.nativeElement.scrollTop;
+    const diffX = x - fromX;
+    const diffY = y - fromY;
+
+
+    const stepScrollX = diffX/frames;
+    const stepScrollY = diffY/frames;
+
+
+
+    let i = 0;
+    let interval = setInterval(() => {
+      i++;
+      const scrollToX = fromX + (i * stepScrollX * this.easeInOutCubic(i/frames) );
+      const scrollToY = fromY + (i * stepScrollY * this.easeInOutCubic(i/frames) );
+      this.scoreScroller._scrollContent.nativeElement.scroll( scrollToX , scrollToY);
+      if (i >= frames) {
+        clearInterval(interval);
+      }
+    }, frameLength)
+
   }
 
   finish() {
@@ -688,5 +750,13 @@ export class RadialPage {
   playFragment(audioBite: number) {
     var audio = new Audio('/assets/sound/Listening_task_' + audioBite + '.mp3');
     audio.play();
+  }
+
+  playSheetMusic() {
+    ABCJS.startAnimation(document.getElementById("drawScore"), this.tunes[0], {
+      showCursor: true,
+      bpm: 120,
+    });
+    this.musicCtrl.playWholeSheet();
   }
 }
