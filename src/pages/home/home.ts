@@ -23,4 +23,8 @@ export class HomePage {
     this.db.setRandomUserID();
     this.musicCtrl.purge();
   }
+
+  toggleVibration() {
+    this.db.vibrationOn = !this.db.vibrationOn;
+  }
 }

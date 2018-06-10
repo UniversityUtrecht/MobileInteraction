@@ -16,6 +16,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { DatabaseProvider } from '../providers/database/database';
 import { PlayPage } from "../pages/play/play";
 import { PlayPageModule } from "../pages/play/play.module";
+import { Vibration } from "@ionic-native/vibration";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCHTvtcAKXhyyFufCPUFxj1GoAJlm-5Rsg",
@@ -54,6 +55,7 @@ const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MusicProvider,
     DatabaseProvider,
+    Vibration
   ]
 })
 export class AppModule {}
