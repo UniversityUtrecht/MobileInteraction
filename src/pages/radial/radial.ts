@@ -684,4 +684,9 @@ export class RadialPage {
     // Return to main menu
     this.navCtrl.pop();
   }
+
+  playFragment(audioBite: number) {
+    var audio = new Audio('/assets/sound/Listening_task_' + audioBite + '.mp3');
+    audio.play();
+  }
 }

@@ -18,6 +18,15 @@ page-radial {
     pointer-events: none !important;
   }
 
+  // BUTTONS
+  .contIcons {
+    cursor: pointer;
+  }
+  #playAll {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
   // MAJOR CIRCLE
   #major g path {
     stroke: black;
