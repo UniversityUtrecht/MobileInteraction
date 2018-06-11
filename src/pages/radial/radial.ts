@@ -447,6 +447,8 @@ function createDial(){
 
 var STOP = false;
 function resizeEvent(){
+  "mousemove,mousedown,mouseup,mouseout,mouseover,touchmove,touchstart,touchend".split(",").forEach( // mousewheel,DOMMouseScroll
+    function(n){document.removeEventListener(n, mouseMoveGlobal);});
   createDial();
 }
 
