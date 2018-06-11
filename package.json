@@ -49,7 +49,7 @@
     "rxjs": "^6.2.0",
     "rxjs-compat": "^6.2.0",
     "sw-toolbox": "3.6.0",
-    "tslib": "^1.9.1",
+    "tslib": "^1.9.2",
     "zone.js": "0.8.26"
   },
   "devDependencies": {

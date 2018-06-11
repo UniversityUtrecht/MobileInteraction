@@ -646,57 +646,17 @@ export class RadialPage {
       //event.preventDefault();
       this.musicCtrl.stopNotePlay();
       this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-      this.scroll(1000,0);
+      this.scroll(10000,0);
       if (this.db.vibrationOn) {
         this.vibration.vibrate(0);
       }
   }
 
-  easeInOutCubic (t: number) {
-    /*
-     * Easing Functions - inspired from http://gizma.com/easing/
-     * only considering the t value for the range [0, 1] => [0, 1]
-     * https://gist.github.com/gre/1650294
-     */
-    return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1
-  }
-
-  /**
-   * Taken from https://gist.github.com/sgotre/e070ef5cce1c778a6380d4c139047e13
-   * @param {number} x
-   * @param {number} y
-   */
   scroll(x: number,y:number) {
-
-    // create an animation
-    const fps = 120; // Frames per second.. consider using good value depending on your device
-    const duration = 300; //animation duration in ms
-
-    const frameLength = Math.floor(duration/fps);
-    const frames = Math.floor(duration/frameLength);
-
-    const fromX = this.scoreScroller._scrollContent.nativeElement.scrollLeft;
-    const fromY = this.scoreScroller._scrollContent.nativeElement.scrollTop;
-    const diffX = x - fromX;
-    const diffY = y - fromY;
-
-
-    const stepScrollX = diffX/frames;
-    const stepScrollY = diffY/frames;
-
-
-
-    let i = 0;
-    let interval = setInterval(() => {
-      i++;
-      const scrollToX = fromX + (i * stepScrollX * this.easeInOutCubic(i/frames) );
-      const scrollToY = fromY + (i * stepScrollY * this.easeInOutCubic(i/frames) );
-      this.scoreScroller._scrollContent.nativeElement.scroll( scrollToX , scrollToY);
-      if (i >= frames) {
-        clearInterval(interval);
-      }
-    }, frameLength)
-
+    // wait a few ms
+    setTimeout(() => {
+      this.scoreScroller._scrollContent.nativeElement.scroll(x, 0);
+    }, 30)
   }
 
   finish() {

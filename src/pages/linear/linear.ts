@@ -1,9 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 
 import ABCJS from "abcjs";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
+import { Vibration } from "@ionic-native/vibration";
+
+let scoreOptions = {
+  scale : 0.9,
+  viewportHorizontal : true,
+  staffwidth: 300,
+  add_classes: true
+};
 
 /**
  * Generated class for the LinearPage page.
@@ -26,12 +34,17 @@ export class LinearPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider) {
+  tunes: any;
+
+    @ViewChild('scoreScroller') scoreScroller: any;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+              public musicCtrl: MusicProvider, private db: DatabaseProvider, private vibration: Vibration) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+    this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
   }
 
   updateDurationProgressBar(){
@@ -65,8 +78,8 @@ export class LinearPage {
 
   undoNote() {
     this.musicCtrl.undoLastNote();
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
-  }
+    this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+}
 
   startNotePlay(event: Event, note: string) {
     this.keyPressed = true;
@@ -75,6 +88,9 @@ export class LinearPage {
     //event.stopPropagation(); // avoid double-playing for touch/mouse events
     //event.preventDefault();
     this.musicCtrl.startNotePlay(note);
+    if (this.db.vibrationOn) {
+      this.vibration.vibrate(1000);
+    }
   }
 
   stopNotePlay(event: Event) {
@@ -88,8 +104,18 @@ export class LinearPage {
     //event.stopPropagation(); // avoid double-playing for touch/mouse events
     //event.preventDefault();
     this.musicCtrl.stopNotePlay();
-    ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), {scale : 0.9, viewportHorizontal : true, scrollHorizontal : true});
+    this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+    this.scroll(10000,0);
+    if (this.db.vibrationOn) {
+       this.vibration.vibrate(0);
+    }
   }
+  scroll(x: number,y:number) {
+      // wait a few ms
+      setTimeout(() => {
+        this.scoreScroller._scrollContent.nativeElement.scroll(x, 0);
+      }, 30)
+    }
 
   finish() {
     // Send results to log server
@@ -107,5 +133,18 @@ export class LinearPage {
 
     // Return to main menu
     this.navCtrl.pop();
+  }
+
+  playFragment(audioBite: number) {
+    var audio = new Audio('/assets/sound/Listening_task_' + audioBite + '.mp3');
+    audio.play();
+  }
+
+  playSheetMusic() {
+    ABCJS.startAnimation(document.getElementById("drawScore"), this.tunes[0], {
+      showCursor: true,
+      bpm: 120,
+    });
+    this.musicCtrl.playWholeSheet();
   }
 }

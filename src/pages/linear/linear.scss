@@ -36,4 +36,13 @@ page-linear {
     overflow: scroll;
     white-space: nowrap;
   }
+  // MUSIC SHEETS
+  #scoreScroller {
+  }
+  #drawScore {
+  }
+  #drawScore .cursor {
+    background-color: #ffffc0;
+    opacity: 0.5;
+  }
 }
