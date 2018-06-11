@@ -590,6 +590,7 @@ export class RadialPage {
   }
 
   ionViewWillLeave() {
+    window.removeEventListener("resize",resizeEvent);
     "mousemove,mousedown,mouseup,mouseout,mouseover,touchmove,touchstart,touchend".split(",").forEach( // mousewheel,DOMMouseScroll
       function(n){document.removeEventListener(n, mouseMoveGlobal);});
     let canvas = document.getElementById("canv");
