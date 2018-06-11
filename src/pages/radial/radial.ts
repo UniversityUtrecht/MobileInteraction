@@ -5,8 +5,10 @@ import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
 import ABCJS from "abcjs";
 import { BehaviorSubject } from "rxjs/Rx";
+import { Vibration } from "@ionic-native/vibration";
 
 let dialValue: BehaviorSubject<number>;
+let dialManualChange: boolean = false;
 let mouseMoveGlobal;
 
 let scoreOptions = {
@@ -266,6 +268,13 @@ function createDial(){
   // Update by checking mouse position and setting cursor and controling the dragging
   // circular control needs to be bound to a circular control object
   function updateCircularControl(){
+    if (dialManualChange) {
+      dialManualChange = false;
+      this.value = dialValue.getValue();
+      this.floatingValue = dialValue.getValue();
+      this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
+    }
+
     var r, r1, r2, x, y, dist, ang, a, w, mouseOver;
     r = this.radius1;
     r1 = this.radius2;
@@ -315,7 +324,7 @@ function createDial(){
               currentAnchorElement = document.getElementById("radialPiano").getBoundingClientRect();
               centerX = currentAnchorElement.left + currentAnchorElement['width'] / 2;
               centerY = currentAnchorElement.top + currentAnchorElement['height'] / 2;
-              }
+            }
 
             ang = ((Math.atan2(mouse.y - centerY, mouse.x - centerX)) + PI2) % PI2;
             // get the delta from last angle
@@ -333,7 +342,7 @@ function createDial(){
             this.raw += a;
             this.value =  ((this.raw - this.startAng) / (this.endAng - this.startAng)) * (this.max - this.min) + this.min
             this.value = Math.min(this.max, Math.max(this.min, this.value));
-            dialValue.next(Math.floor(this.value));
+            dialValue.next(this.value);
             if(!this.floating){
               this.floatingValue = this.value;
             }
@@ -350,7 +359,7 @@ function createDial(){
   }
 
   // set circular control floating value needs to be bound to a circular control object
-  function setCirciularFloatingValue(v){
+  function setCircularFloatingValue(v){
     this.floatingValue = v;
     this.floatingRaw = (this.floatingValue / (this.max - this.min)) * (this.endAng - this.startAng) + this.startAng;
   }
@@ -395,7 +404,7 @@ function createDial(){
       mouse : mouse,              // set the mouse
       id : mouse.getInterfaceId(), // get an ID for this control
       update : updateCircularControl,  // updates the control
-      setFloatingValue : setCirciularFloatingValue,
+      setFloatingValue : setCircularFloatingValue,
     }
     return control;
   }
@@ -464,7 +473,6 @@ export class RadialPage {
     "a": 3,
     "b": 3
   };
-  currentKey: number = 19; // key 19 is A3, so that C4 is central. There are 52 keys in total (0-51).
 
   tunes: any;
 
@@ -514,50 +522,6 @@ export class RadialPage {
     }
   }
 
-  moveOneUp() {
-    if (this.octaveHeights["c"] === this.octaveHeights["b"]) {
-      this.currentKey++;
-      this.octaveHeights["c"]++;
-    } else {
-      let lastHeight = -1;
-      for (let key in this.octaveHeights) {
-        if (lastHeight > this.octaveHeights[key]) {
-          // stop if key does not exist (c8 is highest possible)
-          if(this.octaveHeights[key] === 7 && key === "d") {
-            return;
-          }
-          this.octaveHeights[key] = this.octaveHeights[key]+1;
-          this.currentKey++;
-          return;
-        } else {
-          lastHeight = this.octaveHeights[key];
-        }
-      }
-    }
-  }
-  moveOneDown() {
-    if (this.octaveHeights["b"] === this.octaveHeights["c"]) {
-      this.currentKey--;
-      this.octaveHeights["b"]--;
-    } else {
-      let lastHeight = -1;
-      let lastKey = "";
-      for (let key in this.octaveHeights) {
-        if (lastHeight > this.octaveHeights[key]) {
-          // stop if key does not exist (b0 is lowest possible)
-          if(this.octaveHeights[key] === 0 && key === "a") {
-            return;
-          }
-          this.octaveHeights[lastKey] = this.octaveHeights[lastKey]-1;
-          this.currentKey--;
-          return;
-        } else {
-          lastHeight = this.octaveHeights[key];
-          lastKey = key;
-        }
-      }
-    }
-  }
   moveAllUp() {
     // Check if valid
     if(this.octaveHeights["d"] === 7) {
@@ -567,7 +531,10 @@ export class RadialPage {
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]+1;
     }
-    this.currentKey= this.currentKey + 7;
+
+    // Propagate to dial element
+    dialManualChange = true;
+    dialValue.next(dialValue.getValue() + 7);
   }
   moveAllDown() {
     // Check if valid
@@ -578,7 +545,10 @@ export class RadialPage {
     for (let key in this.octaveHeights) {
       this.octaveHeights[key] = this.octaveHeights[key]-1;
     }
-    this.currentKey= this.currentKey - 7;
+
+    // Propagate to dial element
+    dialManualChange = true;
+    dialValue.next(dialValue.getValue() - 7);
   }
 
   currentDuration:number = 0;
@@ -588,7 +558,8 @@ export class RadialPage {
   keyPressed:boolean = false;
   timeId:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider, private db: DatabaseProvider, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public musicCtrl: MusicProvider,
+              private db: DatabaseProvider, public loadingCtrl: LoadingController, private vibration: Vibration) {
     dialValue = new BehaviorSubject<number>(21);
     // console.log(dialValue); // DEBUG
   }
@@ -612,7 +583,7 @@ export class RadialPage {
 
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
-      this.moveToKey(value);
+      this.moveToKey(Math.floor(value));
     })
   }
 
@@ -664,6 +635,9 @@ export class RadialPage {
       event.stopPropagation(); // avoid double-playing for touch/mouse events
       event.preventDefault();
       this.musicCtrl.startNotePlay(note);
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(1000);
+      }
   }
 
   stopNotePlay(event: Event) {
@@ -672,54 +646,17 @@ export class RadialPage {
       event.preventDefault();
       this.musicCtrl.stopNotePlay();
       this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-      this.scroll(1000,0);
-  }
-
-  easeInOutCubic (t: number) {
-    /*
-     * Easing Functions - inspired from http://gizma.com/easing/
-     * only considering the t value for the range [0, 1] => [0, 1]
-     * https://gist.github.com/gre/1650294
-     */
-    return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1
-  }
-
-  /**
-   * Taken from https://gist.github.com/sgotre/e070ef5cce1c778a6380d4c139047e13
-   * @param {number} x
-   * @param {number} y
-   */
-  scroll(x: number,y:number) {
-
-    // create an animation
-    const fps = 120; // Frames per second.. consider using good value depending on your device
-    const duration = 300; //animation duration in ms
-
-    const frameLength = Math.floor(duration/fps);
-    const frames = Math.floor(duration/frameLength);
-
-    const fromX = this.scoreScroller._scrollContent.nativeElement.scrollLeft;
-    const fromY = this.scoreScroller._scrollContent.nativeElement.scrollTop;
-    const diffX = x - fromX;
-    const diffY = y - fromY;
-
-
-    const stepScrollX = diffX/frames;
-    const stepScrollY = diffY/frames;
-
-
-
-    let i = 0;
-    let interval = setInterval(() => {
-      i++;
-      const scrollToX = fromX + (i * stepScrollX * this.easeInOutCubic(i/frames) );
-      const scrollToY = fromY + (i * stepScrollY * this.easeInOutCubic(i/frames) );
-      this.scoreScroller._scrollContent.nativeElement.scroll( scrollToX , scrollToY);
-      if (i >= frames) {
-        clearInterval(interval);
+      this.scroll(10000,0);
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(0);
       }
-    }, frameLength)
+  }
 
+  scroll(x: number,y:number) {
+    // wait a few ms
+    setTimeout(() => {
+      this.scoreScroller._scrollContent.nativeElement.scroll(x, 0);
+    }, 30)
   }
 
   finish() {

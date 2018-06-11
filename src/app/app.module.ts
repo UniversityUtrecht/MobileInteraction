@@ -14,6 +14,9 @@ import { MusicProvider } from '../providers/music/music';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { DatabaseProvider } from '../providers/database/database';
+import { PlayPage } from "../pages/play/play";
+import { PlayPageModule } from "../pages/play/play.module";
+import { Vibration } from "@ionic-native/vibration";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCHTvtcAKXhyyFufCPUFxj1GoAJlm-5Rsg",
@@ -34,6 +37,7 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     LinearPageModule,
     RadialPageModule,
+    PlayPageModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
   ],
@@ -42,7 +46,8 @@ const firebaseConfig = {
     MyApp,
     HomePage,
     LinearPage,
-    RadialPage
+    RadialPage,
+    PlayPage
   ],
   providers: [
     StatusBar,
@@ -50,6 +55,7 @@ const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MusicProvider,
     DatabaseProvider,
+    Vibration
   ]
 })
 export class AppModule {}
