@@ -80,15 +80,8 @@
           <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (mousedown)="startNotePlay($event, 'bb' + octave)" (mouseup)="stopNotePlay($event)" (touchstart)="startNotePlay($event, 'bb' + octave)" (touchend)="stopNotePlay($event)"></rect>
         </g>
       </svg></div>
-    <div align="center">
-      Slide finger here to scroll left/right
-    </div>
   </ion-scroll>
   <ion-toolbar>
-    <ion-buttons>
-      <button color="dark" outline ion-button (click)="playFragment(1)">1.&#9658;</button>
-      <button color="dark" outline ion-button (click)="playFragment(2)">2.&#9658;</button>
-    </ion-buttons>
     <ion-buttons end>
       <button color="dark" outline ion-button (click)="undoNote()">
         <svg class="contIcons" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
