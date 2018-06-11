@@ -48,7 +48,6 @@ export class LinearPage {
   }
 
   updateDurationProgressBar(){
-    this.keyPressed = true;
     this.timeId = setInterval(() => {
        this.updateBar();
     }, 100);
@@ -72,7 +71,6 @@ export class LinearPage {
    }
 
   stopProgressBar(){
-    this.keyPressed = false;
     clearInterval(this.timeId);
     this.currentDuration= 0;
     this.currentNoteDuration = "0";
@@ -84,6 +82,8 @@ export class LinearPage {
 }
 
   startNotePlay(event: Event, note: string) {
+    this.keyPressed = true;
+    this.updateDurationProgressBar();
     console.log(note + " started");
     event.stopPropagation(); // avoid double-playing for touch/mouse events
     event.preventDefault();
@@ -94,6 +94,12 @@ export class LinearPage {
   }
 
   stopNotePlay(event: Event) {
+    if (!this.keyPressed) {
+      return;
+    }
+    this.keyPressed = false;
+    this.stopProgressBar();
+
     console.log("stopped note");
     event.stopPropagation(); // avoid double-playing for touch/mouse events
     event.preventDefault();
