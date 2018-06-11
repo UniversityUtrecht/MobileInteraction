@@ -4,7 +4,6 @@ import { MusicProvider } from "../../providers/music/music";
 
 import ABCJS from "abcjs";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
-import { BehaviorSubject } from "rxjs/Rx";
 import { Vibration } from "@ionic-native/vibration";
 
 let scoreOptions = {
@@ -128,5 +127,18 @@ export class LinearPage {
 
     // Return to main menu
     this.navCtrl.pop();
+  }
+
+  playFragment(audioBite: number) {
+    var audio = new Audio('/assets/sound/Listening_task_' + audioBite + '.mp3');
+    audio.play();
+  }
+
+  playSheetMusic() {
+    ABCJS.startAnimation(document.getElementById("drawScore"), this.tunes[0], {
+      showCursor: true,
+      bpm: 120,
+    });
+    this.musicCtrl.playWholeSheet();
   }
 }
