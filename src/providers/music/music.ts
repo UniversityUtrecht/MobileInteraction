@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 import MIDIPlayer from 'midi.js';
 import MIDIWriter from 'jsmidgen';
+//import ABCJS from "abcjs/midi";
 
 @Injectable()
 export class MusicProvider {
@@ -25,7 +26,8 @@ export class MusicProvider {
   overallStartTime:number=0;
 
   constructor() {
-  MIDIPlayer.loadPlugin({
+	  console.log(MIDIPlayer);
+    MIDIPlayer.loadPlugin({
       soundfontUrl: "/assets/soundfont/",
       onprogress: function(state, progress) {
         console.log(state, progress);
@@ -35,6 +37,7 @@ export class MusicProvider {
 		MIDIPlayer.BPM = 80;
       }
     });
+
   }
 
   // Test function, ignore it.
@@ -108,6 +111,7 @@ export class MusicProvider {
   {
     this.noteList.push(note);
     this.noteDurations.push(time);
+	console.log("Added " + note + " " + time);
   }
 
   // Remove last added note.
@@ -136,18 +140,28 @@ export class MusicProvider {
     let file:MIDIWriter.File = new MIDIWriter.File();
     let track:MIDIWriter.Track = new MIDIWriter.Track();
     file.addTrack(track);
-    for (let i in this.noteList) {
+	for(let i=0; i<this.noteList.length; i++) {
       track.addNote(0, this.noteList[i], this.noteDurations[i]);
+	  console.log(this.noteList[i] + " " + this.noteDurations[i])
     }
+	
     return file;
   }
 
   // Play whole music sheet.
   playWholeSheet() {
-    MIDIPlayer.Player.currentData = this.generateMIDITrack().toBytes();
-    MIDIPlayer.Player.loadMidiFile();
-    MIDIPlayer.Player.stop();
-    MIDIPlayer.Player.start();
+	//MIDIPlayer.Player.stop();
+    //MIDIPlayer.Player.currentData = this.generateMIDITrack().toBytes();
+    //MIDIPlayer.Player.loadMidiFile();
+    //MIDIPlayer.Player.start();
+	
+	let accDuration:number = 0;
+	for (let i in this.noteList) {
+		MIDIPlayer.noteOn(0, MIDIPlayer.keyToNote[this.noteList[i]], this.velocity, accDuration+0);
+		MIDIPlayer.noteOff(0, MIDIPlayer.keyToNote[this.noteList[i]], accDuration + 1/512 * this.noteDurations[i]);
+		accDuration+= 1/512 * this.noteDurations[i] + 0.1;
+	}
+	//ABCJS.midi.startPlaying(this.generateMIDITrack());
   }
 
   // Generate simple ABC notation without enforcing musical rules.
