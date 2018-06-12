@@ -71,12 +71,6 @@ export class LinearPage {
     pianoContainer.scrollIntoView({ behavior: "smooth" });
   }
 
-  updateDurationProgressBar(){
-    this.timeId = setInterval(() => {
-       this.updateBar();
-    }, 100);
-  }
-
   updateBar(){
     this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage()
     /** console.log('current duration: '+ this.currentDuration); */
@@ -126,6 +120,9 @@ export class LinearPage {
         this.vibration.vibrate(250);
       }
 
+      this.currentDuration=25;
+      this.currentNoteDuration = "1/8";
+
       this.musicCtrl.startNotePlay(note);
       setTimeout(() => {
         this.musicCtrl.stopNotePlay();
@@ -142,7 +139,7 @@ export class LinearPage {
         this.vibration.vibrate(1000);
       }
     }
-    
+
     // event.stopPropagation(); // avoid double-playing for touch/mouse events
     // event.preventDefault();
   }
