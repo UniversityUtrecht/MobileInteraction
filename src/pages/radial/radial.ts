@@ -123,7 +123,6 @@ function createDial(){
     function mouseMove(e) {
       // Check if back button is pressed
       if(e.type === "touchend" || e.type === "touchstart") {
-        console.log(e);
         if (e.target && e.target.className && e.target.className
           && Object.prototype.toString.call(e.target.className) == '[object String]'
           && e.target.className.includes("back-button")) {
