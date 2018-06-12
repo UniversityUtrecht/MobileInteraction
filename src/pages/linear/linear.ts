@@ -5,6 +5,7 @@ import { MusicProvider } from "../../providers/music/music";
 import ABCJS from "abcjs";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 import { Vibration } from "@ionic-native/vibration";
+import { Navbar } from 'ionic-angular';
 
 let scoreOptions = {
   scale : 0.9,
@@ -36,7 +37,8 @@ export class LinearPage {
 
   tunes: any;
 
-    @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild(Navbar) navBar: Navbar;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public musicCtrl: MusicProvider, private db: DatabaseProvider, private vibration: Vibration) {
@@ -45,6 +47,23 @@ export class LinearPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+
+    this.navBar.backButtonClick = (e:UIEvent) => {
+      // Purge sheet music
+      this.musicCtrl.purge();
+      // Return to main menu
+      this.navCtrl.pop();
+    };
+
+    // Listen to key presses
+    this.timeId = setInterval(() => {
+      if (this.keyPressed) {
+        this.updateBar();
+      } else {
+        this.currentDuration= 0;
+        this.currentNoteDuration = "0";
+      }
+    }, 100);
   }
 
   updateDurationProgressBar(){
@@ -70,12 +89,6 @@ export class LinearPage {
     }
    }
 
-  stopProgressBar(){
-    clearInterval(this.timeId);
-    this.currentDuration= 0;
-    this.currentNoteDuration = "0";
-  }
-
   undoNote() {
     this.musicCtrl.undoLastNote();
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
@@ -83,14 +96,15 @@ export class LinearPage {
 
   startNotePlay(event: Event, note: string) {
     this.keyPressed = true;
-    this.updateDurationProgressBar();
     console.log(note + " started");
-    //event.stopPropagation(); // avoid double-playing for touch/mouse events
-    //event.preventDefault();
     this.musicCtrl.startNotePlay(note);
+
     if (this.db.vibrationOn) {
       this.vibration.vibrate(1000);
     }
+
+    // event.stopPropagation(); // avoid double-playing for touch/mouse events
+    // event.preventDefault();
   }
 
   stopNotePlay(event: Event) {
@@ -98,17 +112,19 @@ export class LinearPage {
       return;
     }
     this.keyPressed = false;
-    this.stopProgressBar();
-
     console.log("stopped note");
-    //event.stopPropagation(); // avoid double-playing for touch/mouse events
-    //event.preventDefault();
+
     this.musicCtrl.stopNotePlay();
+
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
     this.scroll(10000,0);
+
     if (this.db.vibrationOn) {
        this.vibration.vibrate(0);
     }
+
+    // event.stopPropagation(); // avoid double-playing for touch/mouse events
+    // event.preventDefault();
   }
   scroll(x: number,y:number) {
       // wait a few ms

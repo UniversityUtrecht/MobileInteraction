@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, Navbar, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
@@ -479,6 +479,7 @@ export class RadialPage {
   tunes: any;
 
   @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild(Navbar) navBar: Navbar;
 
   moveToKey(absKey: number) {
     // check if within range
@@ -583,10 +584,27 @@ export class RadialPage {
       loading.dismiss();
     }, 1000);
 
+    // Listen to key presses
+    this.timeId = setInterval(() => {
+      if (this.keyPressed) {
+        this.updateBar();
+      } else {
+        this.currentDuration= 0;
+        this.currentNoteDuration = "0";
+      }
+    }, 100);
+
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
       this.moveToKey(Math.floor(value));
-    })
+    });
+
+    this.navBar.backButtonClick = (e:UIEvent) => {
+      // Purge sheet music
+      this.musicCtrl.purge();
+      // Return to main menu
+      this.navCtrl.pop();
+    }
   }
 
   ionViewWillLeave() {
@@ -600,13 +618,6 @@ export class RadialPage {
   undoNote() {
     this.musicCtrl.undoLastNote();
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-  }
-
-  updateDurationProgressBar(){
-      this.keyPressed = true;
-      this.timeId = setInterval(() => {
-         this.updateBar();
-      }, 100);
   }
 
   updateBar(){
@@ -626,33 +637,39 @@ export class RadialPage {
     }
   }
 
-  stopProgressBar(){
-      this.keyPressed = false;
-      clearInterval(this.timeId);
-      this.currentDuration= 0;
-      this.currentNoteDuration = "0";
-  }
-
   startNotePlay(event: Event, note: string) {
+      this.keyPressed = true;
       console.log(note + " started");
-      //event.stopPropagation(); // avoid double-playing for touch/mouse events
-      //event.preventDefault();
+
       this.musicCtrl.startNotePlay(note);
+
       if (this.db.vibrationOn) {
         this.vibration.vibrate(1000);
       }
+
+      // event.stopPropagation(); // avoid double-playing for touch/mouse events
+      // event.preventDefault();
   }
 
   stopNotePlay(event: Event) {
+      if (!this.keyPressed) {
+        console.log("no key pressed");
+        return;
+      }
+      this.keyPressed = false;
       console.log("stopped note");
-      //event.stopPropagation(); // avoid double-playing for touch/mouse events
-      //event.preventDefault();
+
       this.musicCtrl.stopNotePlay();
-      this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-      this.scroll(10000,0);
+
       if (this.db.vibrationOn) {
         this.vibration.vibrate(0);
       }
+
+      this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+      this.scroll(10000,0);
+
+      // event.stopPropagation(); // avoid double-playing for touch/mouse events
+      // event.preventDefault();
   }
 
   scroll(x: number,y:number) {
@@ -676,13 +693,6 @@ export class RadialPage {
     // Purge sheet music
     this.musicCtrl.purge();
 
-    // Return to main menu
-    this.navCtrl.pop();
-  }
-
-  back() {
-    // Purge sheet music
-    this.musicCtrl.purge();
     // Return to main menu
     this.navCtrl.pop();
   }
