@@ -27,57 +27,57 @@
 </ion-content>
 
 <ion-footer>
-  <ion-scroll #pianoScroller scrollX="true" style = "width: 100%; height: 30vh">
+  <ion-scroll #pianoScroller id="pianoScroller" scrollX="true" style = "width: 100%; height: 30vh">
     <div id="piano-container">
       <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 980 80" id="piano">
         <g *ngFor="let octave of [1,2,3,4,5,6,7]; let i = index">
           <svg width="20" height="80" id="c + {{ octave }}" [attr.x]="0+140*i" y="0">
-            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'c' + octave)" (tap)="startNotePlay($event, 'c' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white c" data-note="c0" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'c' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">C</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="d + {{ octave }}" [attr.x]="20+140*i" y="0">
-            <rect class="white d" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'd' + octave)" (tap)="startNotePlay($event, 'd' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white d" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'd' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">D</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="e + {{ octave }}" [attr.x]="40+140*i" y="0">
-            <rect class="white e" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'e' + octave)" (tap)="startNotePlay($event, 'e' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white e" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'e' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">E</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="f + {{ octave }}" [attr.x]="60+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'f' + octave)" (tap)="startNotePlay($event, 'f' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'f' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">F</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="g + {{ octave }}" [attr.x]="80+140*i" y="0">
-            <rect class="white f" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'g' + octave)" (tap)="startNotePlay($event, 'g' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white f" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'g' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">G</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="a + {{ octave }}" [attr.x]="100+140*i" y="0">
-            <rect class="white a" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'a' + octave)" (tap)="startNotePlay($event, 'a' + octave)" (touchend)="stopNotePlay($event)"></rect>
+            <rect class="white a" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'a' + octave)" (touchend)="stopNotePlay($event)"></rect>
             <text x="13%" y="90%">A</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
           <svg width="20" height="80" id="b + {{ octave }}" [attr.x]="120+140*i" y="0">
-            <rect class="white b" width="20" height="80" x="0" y="0" (press)="startNotePlay($event, 'b' + octave)" (tap)="startNotePlay($event, 'b' + octave)" (touchend)="stopNotePlay($event);"></rect>
+            <rect class="white b" width="20" height="80" x="0" y="0" (touchstart)="startNotePlay($event, 'b' + octave)" (touchend)="stopNotePlay($event);"></rect>
             <text x="13%" y="90%">B</text>
             <text x="57%" y="90%" class="octaveNum">{{ octave }}</text>
           </svg>
 
-          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (press)="startNotePlay($event, 'db' + octave)" (tap)="startNotePlay($event, 'db' + octave)" (touchend)="stopNotePlay($event)"></rect>
-          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (press)="startNotePlay($event, 'eb' + octave)" (tap)="startNotePlay($event, 'eb' + octave)" (touchend)="stopNotePlay($event)"></rect>
-          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (press)="startNotePlay($event, 'gb' + octave)" (tap)="startNotePlay($event, 'gb' + octave)" (touchend)="stopNotePlay($event)"></rect>
-          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (press)="startNotePlay($event, 'ab' + octave)" (tap)="startNotePlay($event, 'ab' + octave)" (touchend)="stopNotePlay($event)"></rect>
-          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (press)="startNotePlay($event, 'bb' + octave)" (tap)="startNotePlay($event, 'bb' + octave)" (touchend)="stopNotePlay($event)"></rect>
+          <rect class="black cs" width="16" height="50" [attr.x]="12+140*i" y="0" (touchstart)="startNotePlay($event, 'db' + octave)" (touchend)="stopNotePlay($event)"></rect>
+          <rect class="black ds" width="16" height="50" [attr.x]="32+140*i" y="0" (touchstart)="startNotePlay($event, 'eb' + octave)" (touchend)="stopNotePlay($event)"></rect>
+          <rect class="black fs" width="16" height="50" [attr.x]="72+140*i" y="0" (touchstart)="startNotePlay($event, 'gb' + octave)" (touchend)="stopNotePlay($event)"></rect>
+          <rect class="black gs" width="16" height="50" [attr.x]="92+140*i" y="0" (touchstart)="startNotePlay($event, 'ab' + octave)" (touchend)="stopNotePlay($event)"></rect>
+          <rect class="black as" width="16" height="50" [attr.x]="112+140*i" y="0" (touchstart)="startNotePlay($event, 'bb' + octave)" (touchend)="stopNotePlay($event)"></rect>
         </g>
       </svg></div>
   </ion-scroll>
