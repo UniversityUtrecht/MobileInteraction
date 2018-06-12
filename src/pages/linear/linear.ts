@@ -123,8 +123,8 @@ export class LinearPage {
       this.vibration.vibrate(1000);
     }
 
-    // Check if tap AND check if touchend happened before press (indicates press-as-tap)
-    if (event.type === "tap" || Date.now() - this.lastNoteStop < 50) {
+    // Check if tap AND check if touchend happened before press (indicates press-as-tap) in ms
+    if (event.type === "tap" || Date.now() - this.lastNoteStop < 100) {
       console.log(note + " tapped");
 
       this.currentDuration=12;
