@@ -38,6 +38,7 @@ export class LinearPage {
   tunes: any;
 
   @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild('pianoScroller') pianoScroller: any;
   @ViewChild(Navbar) navBar: Navbar;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -64,6 +65,10 @@ export class LinearPage {
         this.currentNoteDuration = "0";
       }
     }, 100);
+
+    // Go to middle of piano at start
+    let pianoContainer = document.getElementById("piano-container");
+    pianoContainer.scrollIntoView({ behavior: "smooth" });
   }
 
   updateDurationProgressBar(){
@@ -92,7 +97,25 @@ export class LinearPage {
   undoNote() {
     this.musicCtrl.undoLastNote();
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-}
+  }
+
+  oneOctaveDown() {
+    // Get length of single octave
+    let pianoContainer = document.getElementById("piano-container");
+    let octaveWidth = pianoContainer.getBoundingClientRect().width / 7;
+
+    // Move one octave down
+    this.pianoScroller._scrollContent.nativeElement.scroll(this.pianoScroller._scrollContent.nativeElement.scrollLeft - octaveWidth, 0);
+  }
+  oneOctaveUp() {
+    // Get length of single octave
+    let pianoContainer = document.getElementById("piano-container");
+    let octaveWidth = pianoContainer.getBoundingClientRect().width / 7;
+
+    // Move one octave up
+    this.pianoScroller._scrollContent.nativeElement.scroll(this.pianoScroller._scrollContent.nativeElement.scrollLeft + octaveWidth, 0);
+
+  }
 
   startNotePlay(event: Event, note: string) {
     this.keyPressed = true;

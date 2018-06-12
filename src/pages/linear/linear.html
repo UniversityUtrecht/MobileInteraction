@@ -27,7 +27,7 @@
 </ion-content>
 
 <ion-footer>
-  <ion-scroll scrollX="true" style = "width: 100%; height: 30vh">
+  <ion-scroll #pianoScroller scrollX="true" style = "width: 100%; height: 30vh">
     <div id="piano-container">
       <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 980 80" id="piano">
         <g *ngFor="let octave of [1,2,3,4,5,6,7]; let i = index">
@@ -82,6 +82,14 @@
       </svg></div>
   </ion-scroll>
   <ion-toolbar>
+    <ion-buttons>
+      <button color="dark" outline ion-button (click)="oneOctaveDown()">
+        Octave down
+      </button>
+      <button color="dark" outline ion-button (click)="oneOctaveUp()">
+        Octave up
+      </button>
+    </ion-buttons>
     <ion-buttons end>
       <button color="dark" outline ion-button (click)="undoNote()">
         <svg class="contIcons" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24">
