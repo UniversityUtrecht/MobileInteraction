@@ -137,7 +137,7 @@ export class LinearPage {
         }
         this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
         this.scroll(10000,0);
-      }, 250);
+      }, 100);
 
     } else { // Note was pressed
       this.keyPressed = true;
