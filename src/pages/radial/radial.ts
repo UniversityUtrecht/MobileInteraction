@@ -584,6 +584,16 @@ export class RadialPage {
       loading.dismiss();
     }, 1000);
 
+    // Listen to key presses
+    this.timeId = setInterval(() => {
+      if (this.keyPressed) {
+        this.updateBar();
+      } else {
+        this.currentDuration= 0;
+        this.currentNoteDuration = "0";
+      }
+    }, 100);
+
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
       this.moveToKey(Math.floor(value));
@@ -610,13 +620,6 @@ export class RadialPage {
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
   }
 
-  updateDurationProgressBar(){
-      this.keyPressed = true;
-      this.timeId = setInterval(() => {
-         this.updateBar();
-      }, 100);
-  }
-
   updateBar(){
     this.currentDuration=this.musicCtrl.getCurrentPlayingNotePercentage();
     /** console.log('current duration: '+ this.currentDuration); */
@@ -634,33 +637,39 @@ export class RadialPage {
     }
   }
 
-  stopProgressBar(){
-      this.keyPressed = false;
-      clearInterval(this.timeId);
-      this.currentDuration= 0;
-      this.currentNoteDuration = "0";
-  }
-
   startNotePlay(event: Event, note: string) {
+      this.keyPressed = true;
       console.log(note + " started");
-      event.stopPropagation(); // avoid double-playing for touch/mouse events
-      event.preventDefault();
+
       this.musicCtrl.startNotePlay(note);
+
       if (this.db.vibrationOn) {
         this.vibration.vibrate(1000);
       }
+
+      event.stopPropagation(); // avoid double-playing for touch/mouse events
+      event.preventDefault();
   }
 
   stopNotePlay(event: Event) {
+      if (!this.keyPressed) {
+        console.log("no key pressed");
+        return;
+      }
+      this.keyPressed = false;
       console.log("stopped note");
-      event.stopPropagation(); // avoid double-playing for touch/mouse events
-      event.preventDefault();
+
       this.musicCtrl.stopNotePlay();
-      this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
-      this.scroll(10000,0);
+
       if (this.db.vibrationOn) {
         this.vibration.vibrate(0);
       }
+
+      this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+      this.scroll(10000,0);
+
+      event.stopPropagation(); // avoid double-playing for touch/mouse events
+      event.preventDefault();
   }
 
   scroll(x: number,y:number) {
