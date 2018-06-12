@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, LoadingController, Navbar, NavController, NavParams } from 'ionic-angular';
 import { MusicProvider } from "../../providers/music/music";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 
@@ -479,6 +479,7 @@ export class RadialPage {
   tunes: any;
 
   @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild(Navbar) navBar: Navbar;
 
   moveToKey(absKey: number) {
     // check if within range
@@ -586,7 +587,14 @@ export class RadialPage {
     dialValue.subscribe((value: number) => {
       // console.log(value); // DEBUG
       this.moveToKey(Math.floor(value));
-    })
+    });
+
+    this.navBar.backButtonClick = (e:UIEvent) => {
+      // Purge sheet music
+      this.musicCtrl.purge();
+      // Return to main menu
+      this.navCtrl.pop();
+    }
   }
 
   ionViewWillLeave() {
@@ -676,13 +684,6 @@ export class RadialPage {
     // Purge sheet music
     this.musicCtrl.purge();
 
-    // Return to main menu
-    this.navCtrl.pop();
-  }
-
-  back() {
-    // Purge sheet music
-    this.musicCtrl.purge();
     // Return to main menu
     this.navCtrl.pop();
   }

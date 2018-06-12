@@ -5,6 +5,7 @@ import { MusicProvider } from "../../providers/music/music";
 import ABCJS from "abcjs";
 import { DatabaseProvider, PianoType } from "../../providers/database/database";
 import { Vibration } from "@ionic-native/vibration";
+import { Navbar } from 'ionic-angular';
 
 let scoreOptions = {
   scale : 0.9,
@@ -36,7 +37,8 @@ export class LinearPage {
 
   tunes: any;
 
-    @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild('scoreScroller') scoreScroller: any;
+  @ViewChild(Navbar) navBar: Navbar;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public musicCtrl: MusicProvider, private db: DatabaseProvider, private vibration: Vibration) {
@@ -45,6 +47,13 @@ export class LinearPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad LinearPage');
     this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+
+    this.navBar.backButtonClick = (e:UIEvent) => {
+      // Purge sheet music
+      this.musicCtrl.purge();
+      // Return to main menu
+      this.navCtrl.pop();
+    }
   }
 
   updateDurationProgressBar(){
