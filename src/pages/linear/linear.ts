@@ -118,14 +118,31 @@ export class LinearPage {
   }
 
   startNotePlay(event: Event, note: string) {
-    this.keyPressed = true;
-    console.log(note + " started");
-    this.musicCtrl.startNotePlay(note);
+    // Check if tap
+    if (event.type === "tap") {
+      console.log(note + " tapped");
 
-    if (this.db.vibrationOn) {
-      this.vibration.vibrate(1000);
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(250);
+      }
+
+      this.musicCtrl.startNotePlay(note);
+      setTimeout(() => {
+        this.musicCtrl.stopNotePlay();
+        this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
+        this.scroll(10000,0);
+      }, 250);
+
+    } else { // Note was pressed
+      this.keyPressed = true;
+      console.log(note + " started");
+      this.musicCtrl.startNotePlay(note);
+
+      if (this.db.vibrationOn) {
+        this.vibration.vibrate(1000);
+      }
     }
-
+    
     // event.stopPropagation(); // avoid double-playing for touch/mouse events
     // event.preventDefault();
   }

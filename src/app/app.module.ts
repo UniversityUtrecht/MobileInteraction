@@ -29,8 +29,8 @@ const firebaseConfig = {
 
 export class CustomHammerConfig extends HammerGestureConfig {
   overrides = {
-    'tap': { time: 100 },  // change press delay (max)
-    'press': { time: 101 }  // change press delay (min)
+    'tap': { time: 200 },  // change press delay (max)
+    'press': { time: 201 }  // change press delay (min)
   }
 }
 
