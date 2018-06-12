@@ -37,6 +37,8 @@ export class LinearPage {
 
   tunes: any;
 
+  lastNoteStop; // contains time of last note end event
+
   @ViewChild('scoreScroller') scoreScroller: any;
   @ViewChild('pianoScroller') pianoScroller: any;
   @ViewChild(Navbar) navBar: Navbar;
@@ -112,20 +114,27 @@ export class LinearPage {
   }
 
   startNotePlay(event: Event, note: string) {
-    // Check if tap
-    if (event.type === "tap") {
-      console.log(note + " tapped");
+    // console.log("Start", event); // DEBUG
+    // console.error("Time since last stop", Date.now() - this.lastNoteStop); // DEBUG
 
-      if (this.db.vibrationOn) {
-        this.vibration.vibrate(250);
-      }
+    this.musicCtrl.startNotePlay(note);
+
+    if (this.db.vibrationOn) {
+      this.vibration.vibrate(1000);
+    }
+
+    // Check if tap AND check if touchend happened before press (indicates press-as-tap)
+    if (event.type === "tap" || Date.now() - this.lastNoteStop < 50) {
+      console.log(note + " tapped");
 
       this.currentDuration=25;
       this.currentNoteDuration = "1/8";
 
-      this.musicCtrl.startNotePlay(note);
       setTimeout(() => {
         this.musicCtrl.stopNotePlay();
+        if (this.db.vibrationOn) {
+          this.vibration.vibrate(0);
+        }
         this.tunes = ABCJS.renderAbc("drawScore", this.musicCtrl.generateSimpleABCNotation(), scoreOptions);
         this.scroll(10000,0);
       }, 250);
@@ -133,11 +142,6 @@ export class LinearPage {
     } else { // Note was pressed
       this.keyPressed = true;
       console.log(note + " started");
-      this.musicCtrl.startNotePlay(note);
-
-      if (this.db.vibrationOn) {
-        this.vibration.vibrate(1000);
-      }
     }
 
     // event.stopPropagation(); // avoid double-playing for touch/mouse events
@@ -145,6 +149,9 @@ export class LinearPage {
   }
 
   stopNotePlay(event: Event) {
+    // console.log("Stop", event); // DEBUG
+    this.lastNoteStop = Date.now();
+
     if (!this.keyPressed) {
       return;
     }
