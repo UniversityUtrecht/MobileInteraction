@@ -127,7 +127,7 @@ export class LinearPage {
     if (event.type === "tap" || Date.now() - this.lastNoteStop < 50) {
       console.log(note + " tapped");
 
-      this.currentDuration=25;
+      this.currentDuration=12;
       this.currentNoteDuration = "1/8";
 
       setTimeout(() => {
