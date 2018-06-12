@@ -121,6 +121,15 @@ function createDial(){
       type: "mouse"
     };
     function mouseMove(e) {
+      // Check if back button is pressed
+      if(e.type === "touchend" || e.type === "touchstart") {
+        if (e.target && e.target.className && e.target.className
+          && Object.prototype.toString.call(e.target.className) == '[object String]'
+          && e.target.className.includes("back-button")) {
+          return;
+        }
+      }
+
       var t = e.type, m = mouse;
       let radialPiano = document.getElementById("radialPiano");
       let canv = document.getElementById("canv");
