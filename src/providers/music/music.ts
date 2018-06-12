@@ -53,7 +53,7 @@ export class MusicProvider {
   // Start playing note and measuring its play time.
   startNotePlay(note:string) {
     // If first note, store starting time
-    console.log(this.noteList);
+    // console.log(this.noteList);
     if (this.noteList.length === 0 && this.undoCount === 0) {
       this.overallStartTime = Date.now();
     }
