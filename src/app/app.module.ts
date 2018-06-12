@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,6 +26,12 @@ const firebaseConfig = {
   storageBucket: "hazelnote-10ab2.appspot.com",
   messagingSenderId: "802874862515"
 };
+
+export class CustomHammerConfig extends HammerGestureConfig {
+  overrides = {
+    'press': { time: 60 }  // change press delay
+  }
+}
 
 @NgModule({
   declarations: [
@@ -55,7 +61,8 @@ const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     MusicProvider,
     DatabaseProvider,
-    Vibration
+    Vibration,
+    { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
   ]
 })
 export class AppModule {}
